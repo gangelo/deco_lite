@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-# require_relative 'attribute_optionable'
-
 module Deco
   # Defines methods and attributes to manage options.
   module Optionable
@@ -12,26 +10,30 @@ module Deco
       include Deco::AttributeOptionable
     end
 
-    attr_reader :options
-
     def validate_options!
       raise ArgumentError, 'options is not a Hash' unless options.is_a? Hash
 
       return true if options.empty?
 
-      invalid_options = options.except(*OPTIONS)&.keys
-      raise ArgumentError, "One or more options were unrecognized: #{invalid_options}" unless invalid_options.blank?
-
+      validate_option_keys!
       validate_option_attr!
       validate_option_namespace!
     end
 
+    def attr
+      options[:attrs] || AttributeOptionable::DEFAULT
+    end
+
+    def namespace
+      options[:namespace]
+    end
+
     def merge?
-      options[:attrs] == AttributeOptionable::MERGE
+      attr == AttributeOptionable::MERGE
     end
 
     def strict?
-      options[:attrs] == AttributeOptionable::STRICT
+      attr == AttributeOptionable::STRICT
     end
 
     def namespace?
@@ -40,22 +42,27 @@ module Deco
 
     private
 
-    attr_writer :options
+    attr_accessor :options
+
+    def validate_option_keys!
+      invalid_options = options.except(*OPTIONS)&.keys
+      raise ArgumentError, "One or more options were unrecognized: #{invalid_options}" unless invalid_options.blank?
+    end
 
     def validate_option_attr!
-      option = options[:attrs]
-      return if option.nil? || OPTION_ATTRS_VALUES.include?(option)
+      option = attr
+      return if OPTION_ATTRS_VALUES.include?(option)
 
       raise ArgumentError,
-        "option :attrs value is invalid. #{OPTION_ATTRS_VALUES} (Symbol) " \
+        "option :attrs value or type is invalid. #{OPTION_ATTRS_VALUES} (Symbol) " \
           "was expected, but '#{option}' (#{option.class}) was received."
     end
 
     def validate_option_namespace!
       option = options[:namespace]
-      return if option.nil? || option.is_a?(Symbol)
+      return if option.is_a?(Symbol)
 
-      raise ArgumentError, 'option :namespace value is invalid. A Symbol was expected, ' \
+      raise ArgumentError, 'option :namespace value or type is invalid. A Symbol was expected, ' \
         "but '#{option}' (#{option.class}) was received."
     end
   end

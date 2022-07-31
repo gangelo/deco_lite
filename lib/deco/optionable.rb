@@ -19,7 +19,7 @@ module Deco
       return true if options.empty?
 
       invalid_options = options.except(*OPTIONS)&.keys
-      if invalid_options
+      unless invalid_options.blank?
         raise ArgumentError, "One or more options were unrecognized: #{invalid_options}"
       end
     end

@@ -84,6 +84,32 @@ RSpec.describe Deco::Optionable, type: :module do
           expect { optionable_klass.new(options).validate_options! }.to raise_error expected_error
         end
       end
+
+      context 'with invalid option values' do
+        context 'when option :attrs is the wrong type' do
+          it 'raises an error' do
+            expect do
+              optionable_klass.new({ attrs: 'wrong type' }).validate_options!
+            end.to raise_error(/option :attrs value is invalid/)
+          end
+        end
+
+        context 'when option :attrs is the wrong value' do
+          it 'raises an error' do
+            expect do
+              optionable_klass.new({ attrs: :wrong_value }).validate_options!
+            end.to raise_error(/option :attrs value is invalid/)
+          end
+        end
+
+        context 'when option :namespace is the wrong type' do
+          it 'raises an error' do
+            expect do
+              optionable_klass.new({ namespace: 'wrong type' }).validate_options!
+            end.to raise_error(/option :namespace value is invalid/)
+          end
+        end
+      end
     end
   end
 end

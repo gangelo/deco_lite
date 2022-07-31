@@ -35,7 +35,7 @@ module Deco
       load object: object, options: options if object.present?
     end
 
-    def load(object:, options:)
+    def load(object:, _options:)
       load_hash(hash: object) if object.is_a? Hash
     end
 

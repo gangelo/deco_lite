@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
-#require_relative 'attribute_optionable'
+# require_relative 'attribute_optionable'
 
 module Deco
   # Defines methods and attributes to manage options.
   module Optionable
-    OPTIONS = %i(attrs namespace).freeze
-    OPTION_ATTRS_VALUES = [AttributeOptionable::MERGE, AttributeOptionable::STRICT]
+    OPTIONS = %i[attrs namespace].freeze
+    OPTION_ATTRS_VALUES = [AttributeOptionable::MERGE, AttributeOptionable::STRICT].freeze
 
     class << self
       include Deco::AttributeOptionable
@@ -20,9 +20,7 @@ module Deco
       return true if options.empty?
 
       invalid_options = options.except(*OPTIONS)&.keys
-      unless invalid_options.blank?
-        raise ArgumentError, "One or more options were unrecognized: #{invalid_options}"
-      end
+      raise ArgumentError, "One or more options were unrecognized: #{invalid_options}" unless invalid_options.blank?
 
       validate_option_attr!
       validate_option_namespace!
@@ -57,7 +55,7 @@ module Deco
       option = options[:namespace]
       return if option.nil? || option.is_a?(Symbol)
 
-      raise ArgumentError, "option :namespace value is invalid. A Symbol was expected, " \
+      raise ArgumentError, 'option :namespace value is invalid. A Symbol was expected, ' \
         "but '#{option}' (#{option.class}) was received."
     end
   end

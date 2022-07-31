@@ -1,0 +1,19 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+
+/rdoc/
+*.gem
+
+# rspec failure tracking
+.rspec_status
+
+*.code-workspace
+
+scratch.txt
+readme.txt

@@ -12,6 +12,7 @@ RSpec.describe Deco::Optionable, type: :module do
   let(:options) { {} }
   let(:options_merge) { { attrs: Deco::AttributeOptionable::MERGE } }
   let(:options_strict) { { attrs: Deco::AttributeOptionable::STRICT } }
+  let(:options_namespace) { { namespace: :namespace } }
 
   describe 'constants' do
     describe 'OPTIONS' do
@@ -49,6 +50,14 @@ RSpec.describe Deco::Optionable, type: :module do
         expect(optionable_klass.new(options_merge).strict?).to eq false
         expect(optionable_klass.new(options_strict).strict?).to eq true
         expect(optionable_klass.new({}).strict?).to eq false
+      end
+    end
+
+    describe '#namespace?' do
+      it 'returns the correct value' do
+        expect(optionable_klass.new(options_namespace).namespace?).to eq true
+        expect(optionable_klass.new(options_strict).namespace?).to eq false
+        expect(optionable_klass.new({}).namespace?).to eq false
       end
     end
   end

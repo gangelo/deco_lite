@@ -26,7 +26,6 @@ RSpec.describe Deco::Optionable, type: :module do
     subject(:optionable_object) { optionable_klass.new(options: options) }
 
     it 'includes the expected public methods' do
-      expect(subject).to respond_to :options
       expect(subject).to respond_to :merge?
       expect(subject).to respond_to :namespace?
       expect(subject).to respond_to :strict?
@@ -41,7 +40,12 @@ RSpec.describe Deco::Optionable, type: :module do
       it 'returns the correct value' do
         expect(optionable_klass.new(options_merge).merge?).to eq true
         expect(optionable_klass.new(options_strict).merge?).to eq false
-        expect(optionable_klass.new({}).merge?).to eq false
+      end
+
+      context 'when nil' do
+        it 'returns the default merge value' do
+          expect(optionable_klass.new(options).attr).to eq Deco::AttributeOptionable::DEFAULT
+        end
       end
     end
 
@@ -49,7 +53,6 @@ RSpec.describe Deco::Optionable, type: :module do
       it 'returns the correct value' do
         expect(optionable_klass.new(options_merge).strict?).to eq false
         expect(optionable_klass.new(options_strict).strict?).to eq true
-        expect(optionable_klass.new({}).strict?).to eq false
       end
     end
 
@@ -90,7 +93,7 @@ RSpec.describe Deco::Optionable, type: :module do
           it 'raises an error' do
             expect do
               optionable_klass.new({ attrs: 'wrong type' }).validate_options!
-            end.to raise_error(/option :attrs value is invalid/)
+            end.to raise_error(/option :attrs value or type is invalid/)
           end
         end
 
@@ -98,7 +101,7 @@ RSpec.describe Deco::Optionable, type: :module do
           it 'raises an error' do
             expect do
               optionable_klass.new({ attrs: :wrong_value }).validate_options!
-            end.to raise_error(/option :attrs value is invalid/)
+            end.to raise_error(/option :attrs value or type is invalid/)
           end
         end
 
@@ -106,7 +109,7 @@ RSpec.describe Deco::Optionable, type: :module do
           it 'raises an error' do
             expect do
               optionable_klass.new({ namespace: 'wrong type' }).validate_options!
-            end.to raise_error(/option :namespace value is invalid/)
+            end.to raise_error(/option :namespace value or type is invalid/)
           end
         end
       end

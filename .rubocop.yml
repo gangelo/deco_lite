@@ -67,7 +67,7 @@ Layout/FirstArrayElementIndentation:
 #   literal where the opening brace and the first key are on
 #   seprate lines is indented the same as a hash literal which is not
 #   defined inside a method call.
-Layout/FirstDecoementIndentation:
+Layout/FirstHashElementIndentation:
   EnforcedStyle: consistent
 
 # Indent multi-line methods instead of aligning with periods

@@ -60,5 +60,30 @@ RSpec.describe Deco::Optionable, type: :module do
         expect(optionable_klass.new({}).namespace?).to eq false
       end
     end
+
+    describe '#validate_options!' do
+      context 'with valid option keys' do
+        let(:options) { options_namespace.merge(options_merge) }
+
+        it 'does not raise an error' do
+          expect { optionable_klass.new(options).validate_options! }.to_not raise_error
+        end
+      end
+
+      context 'with invalid option keys' do
+        let(:options) do
+          options_namespace.merge(options_merge)
+                           .merge({ in: 'bad', valid: false, options: 100 })
+        end
+        let(:expected_error) do
+          'One or more options were unrecognized: ' \
+            "#{options.except(*described_class::OPTIONS)&.keys}"
+        end
+
+        it 'raises an error' do
+          expect { optionable_klass.new(options).validate_options! }.to raise_error expected_error
+        end
+      end
+    end
   end
 end

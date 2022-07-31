@@ -6,5 +6,6 @@ module Deco
   module AttributeOptionable
     MERGE = :merge
     STRICT = :strict
+    DEFAULT = MERGE
   end
 end

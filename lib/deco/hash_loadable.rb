@@ -7,10 +7,10 @@ module Deco
     include AttrAccessorCreatable
     include AttributeValuesAssignable
 
-    def load_hash(hash:, _options: {})
+    def load_hash(hash:, options: {})
       raise ArgumentError, 'hash is blank?' if hash.blank?
       raise ArgumentError, 'hash is not a Hash' unless hash.is_a? Hash
-      raise ArgumentError, 'options is not a Hash' unless _options.is_a? Hash
+      raise ArgumentError, 'options is not a Hash' unless options.is_a? Hash
 
       attribute_info = attribute_info_from(hash: hash)
       @attribute_info.merge!(attribute_info)

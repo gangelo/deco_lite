@@ -36,7 +36,7 @@ module Deco
     end
 
     def load(object:, options:)
-      load_hash(hash: object) if object.is_a? Hash
+      load_hash(hash: object, options: options) if object.is_a? Hash
     end
 
     def attribute_names

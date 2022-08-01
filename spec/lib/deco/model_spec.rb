@@ -3,10 +3,6 @@
 RSpec.describe Deco::Model do
   subject(:deco) do
     Class.new(Deco::Model) do
-      validates :first_name, presence: true
-      validates :last_name, presence: true
-      validates :address_street, presence: true
-      validates :address2_street, presence: true
     end.new(object: object, options: options)
   end
 
@@ -80,6 +76,17 @@ RSpec.describe Deco::Model do
         expect(subject).to respond_to :address2_residents_owner=
         expect(subject).to respond_to :address2_residents_coowner
         expect(subject).to respond_to :address2_residents_coowner=
+      end
+
+      context 'when passing a namespace' do
+        let(:options) { { namespace: :namespace } }
+
+        it 'qualifies attribute names with the namespace' do
+          namespace = options[:namespace]
+          expect(subject.attribute_names.all? do |attribute_name|
+            attribute_name.start_with?(namespace.to_s)
+          end).to eq true
+        end
       end
     end
 

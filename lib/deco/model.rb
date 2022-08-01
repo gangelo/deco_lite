@@ -36,7 +36,12 @@ module Deco
     end
 
     def load(object:, options:)
-      load_hash(hash: object, options: options) if object.is_a? Hash
+      case
+      when object.is_a?(Hash)
+        load_hash(hash: object, options: options)
+      else
+        raise ArgumentError, "object (#{object.class}) was not handled"
+      end
     end
 
     def attribute_names

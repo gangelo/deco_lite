@@ -34,6 +34,40 @@ RSpec.describe Deco::Model do
       }
     }
   end
+  let(:attribute_names) do
+    %i(first_name
+      first_name=
+      last_name
+      last_name=
+      address_street
+      address_street=
+      address_street2
+      address_street2=
+      address_city
+      address_city=
+      address_state
+      address_state=
+      address_zip
+      address_zip=
+      address_residents_owner
+      address_residents_owner=
+      address_residents_coowner
+      address_residents_coowner=
+      address2_street
+      address2_street=
+      address2_street2
+      address2_street2=
+      address2_city
+      address2_city=
+      address2_state
+      address2_state=
+      address2_zip
+      address2_zip=
+      address2_residents_owner
+      address2_residents_owner=
+      address2_residents_coowner
+      address2_residents_coowner=)
+    end
 
   let(:options) { { attrs: Deco::AttributeOptionable::MERGE } }
 
@@ -44,38 +78,9 @@ RSpec.describe Deco::Model do
       end
 
       it 'responds to the correct attributes' do
-        expect(subject).to respond_to :first_name
-        expect(subject).to respond_to :first_name=
-        expect(subject).to respond_to :last_name
-        expect(subject).to respond_to :last_name=
-        expect(subject).to respond_to :address_street
-        expect(subject).to respond_to :address_street=
-        expect(subject).to respond_to :address_street2
-        expect(subject).to respond_to :address_street2=
-        expect(subject).to respond_to :address_city
-        expect(subject).to respond_to :address_city=
-        expect(subject).to respond_to :address_state
-        expect(subject).to respond_to :address_state=
-        expect(subject).to respond_to :address_zip
-        expect(subject).to respond_to :address_zip=
-        expect(subject).to respond_to :address_residents_owner
-        expect(subject).to respond_to :address_residents_owner=
-        expect(subject).to respond_to :address_residents_coowner
-        expect(subject).to respond_to :address_residents_coowner=
-        expect(subject).to respond_to :address2_street
-        expect(subject).to respond_to :address2_street=
-        expect(subject).to respond_to :address2_street2
-        expect(subject).to respond_to :address2_street2=
-        expect(subject).to respond_to :address2_city
-        expect(subject).to respond_to :address2_city=
-        expect(subject).to respond_to :address2_state
-        expect(subject).to respond_to :address2_state=
-        expect(subject).to respond_to :address2_zip
-        expect(subject).to respond_to :address2_zip=
-        expect(subject).to respond_to :address2_residents_owner
-        expect(subject).to respond_to :address2_residents_owner=
-        expect(subject).to respond_to :address2_residents_coowner
-        expect(subject).to respond_to :address2_residents_coowner=
+        expect(attribute_names.all? do |attribute_name|
+          subject.respond_to? attribute_name
+        end).to eq true
       end
 
       context 'when passing a namespace' do

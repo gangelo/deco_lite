@@ -4,6 +4,8 @@ module Deco
   # Creates and returns a hash given the parameters that are used to
   # dynamically create attributes and assign values to a model.
   module AttributeInformable
+    module_function
+
     # This method simply navigates the payload hash received and creates qualified
     # hash key names that can be used to verify/map to our attribute names in this model.
     # This can be used to qualify nested hash attributes and saves us some headaches
@@ -55,11 +57,7 @@ module Deco
     end
 
     def attribute_info_field_key_from(key:, field_namespace:, namespace:)
-      return key if field_namespace.blank? && namespace.blank?
-      return "#{field_namespace}_#{key}".to_sym if namespace.blank?
-      return "#{namespace.join('_')}_#{key}".to_sym if field_namespace.blank?
-
-      "#{field_namespace}_#{namespace.join('_')}_#{key}".to_sym
+      [field_namespace, *namespace, key].compact.join('_').to_sym
     end
   end
 end

@@ -46,17 +46,22 @@ module Deco
                               namespace: namespace << key,
                               attribute_name_info: attribute_name_info
           namespace.pop
-          next
+        else
+          add_attribute_name_info_for(key: key,
+                                      namespace: namespace,
+                                      attribute_name_info: attribute_name_info)
         end
-
-        field_key = [*namespace, key].compact.join('_').to_sym
-        attribute_name_info[field_key] = {
-          attribute_name: key,
-          namespace: namespace.dup
-        }
       end
 
       attribute_name_info
+    end
+
+    def add_attribute_name_info_for(key:, namespace:, attribute_name_info:)
+      field_key = [*namespace, key].compact.join('_').to_sym
+      attribute_name_info[field_key] = {
+        attribute_name: key,
+        namespace: namespace.dup
+      }
     end
   end
 end

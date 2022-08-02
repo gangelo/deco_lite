@@ -39,25 +39,22 @@ module Deco
     def attribute_info_from(hash:, field_namespace:, namespace: [], attribute_name_info: {})
       hash.each do |key, value|
         if value.is_a? Hash
-          namespace << key
-          attribute_info_from hash: value, field_namespace: field_namespace,
-                              namespace: namespace, attribute_name_info: attribute_name_info
+          attribute_info_from hash: value,
+                              field_namespace: field_namespace,
+                              namespace: namespace << key,
+                              attribute_name_info: attribute_name_info
           namespace.pop
           next
         end
 
-        namespace = namespace.dup
-        field_key = attribute_info_field_key_from(key: key,
-                                                  field_namespace: field_namespace,
-                                                  namespace: namespace)
-        attribute_name_info[field_key] = { attribute_name: key, namespace: namespace }
+        field_key = [field_namespace, *namespace, key].compact.join('_').to_sym
+        attribute_name_info[field_key] = { attribute_name: key,
+                                           field_namespace: field_namespace,
+                                           namespace: namespace.dup
+                                         }
       end
 
       attribute_name_info
-    end
-
-    def attribute_info_field_key_from(key:, field_namespace:, namespace:)
-      [field_namespace, *namespace, key].compact.join('_').to_sym
     end
   end
 end

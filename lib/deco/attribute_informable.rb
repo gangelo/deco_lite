@@ -37,28 +37,26 @@ module Deco
     # :attribute_name is the actual, unqualified attribute name found in the payload hash sent.
     # :namespace is the hash key by which :attribute_name can be found in the payload hash if need be -
     #   retained across recursive calls.
-    # :attribute_name_info is a hash to retain the attribute information that will be returned -
-    #   retained across recursive calls.
-    def attribute_info_from(hash:, namespace: [], attribute_name_info: {})
+    def attribute_info_from(hash:, namespace: [], attribute_info: {})
       hash.each do |key, value|
         if value.is_a? Hash
           attribute_info_from hash: value,
                               namespace: namespace << key,
-                              attribute_name_info: attribute_name_info
+                              attribute_info: attribute_info
           namespace.pop
         else
-          add_attribute_name_info_for(key: key,
-                                      namespace: namespace,
-                                      attribute_name_info: attribute_name_info)
+          add_attribute_info_to(attribute_info: attribute_info,
+                                key: key,
+                                namespace: namespace)
         end
       end
 
-      attribute_name_info
+      attribute_info
     end
 
-    def add_attribute_name_info_for(key:, namespace:, attribute_name_info:)
+    def add_attribute_info_to(attribute_info:, key:, namespace:)
       field_key = [*namespace, key].compact.join('_').to_sym
-      attribute_name_info[field_key] = {
+      attribute_info[field_key] = {
         attribute_name: key,
         namespace: namespace.dup
       }

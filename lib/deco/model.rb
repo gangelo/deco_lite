@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'attribute_creatable'
+require_relative 'hash_loadable'
 require_relative 'optionable'
 
 module Deco
@@ -7,7 +9,7 @@ module Deco
   # dynamic models that can be used as decorators.
   class Model
     include ActiveModel::Model
-    include AttributeAccessorCreatable
+    include AttributeCreatable
     include HashLoadable
 
     class << self

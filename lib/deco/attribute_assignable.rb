@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
+require_relative 'attribute_creatable'
 require_relative 'attribute_retrievable'
 
 module Deco
   # Defines methods to assign model attribute values dynamically.
   module AttributeAssignable
-    include AttributeAccessorCreatable
+    include AttributeCreatable
     include AttributeRetrievable
 
     def assign_attribute_values(hash:, attribute_info:)

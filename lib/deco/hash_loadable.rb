@@ -1,10 +1,13 @@
 # frozen_string_literal: true
 
+require_relative 'attribute_assignable'
+require_relative 'attribute_informable'
+
 module Deco
   # Provides methods to load and return information about a given hash.
   module HashLoadable
-    include AttributeInformable
     include AttributeAssignable
+    include AttributeInformable
 
     def load_hash(hash:, options: {})
       Validators.validate!(hash: hash, options: options)

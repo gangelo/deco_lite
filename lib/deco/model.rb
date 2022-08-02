@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'attribute_creatable'
+require_relative 'hash_loadable'
 require_relative 'optionable'
 
 module Deco
@@ -7,7 +9,7 @@ module Deco
   # dynamic models that can be used as decorators.
   class Model
     include ActiveModel::Model
-    include AttrAccessorCreatable
+    include AttributeCreatable
     include HashLoadable
 
     class << self
@@ -30,7 +32,7 @@ module Deco
     def initialize(object:, options: { attrs: Deco::AttributeOptionable::MERGE })
       @attribute_info = {}
 
-      attr_accessor_create attribute_names: attribute_names
+      create_attribute_accessors attribute_names: attribute_names
 
       load object: object, options: options if object.present?
     end

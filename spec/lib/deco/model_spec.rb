@@ -8,65 +8,28 @@ RSpec.describe Deco::Model do
 
   let(:object) do
     {
-      first_name: 'Gene',
-      last_name: 'Angelo',
-      address: {
-        street: '123 Broadway',
-        street2: 'Suite A',
-        city: 'New York',
-        state: 'NY',
-        zip: '01234',
-        residents: {
-          owner: 'Gene Angelo',
-          coowner: 'Elijah Angelo'
+      a: 'a',
+      b: 'b',
+      c0: {
+        d: 'c0_d',
+        e: {
+          f: {
+            g: 'c0_e_f_g'
+          }
         }
       },
-      address2: {
-        street: '456 Hollywood Blvd.',
-        street2: '',
-        city: 'Hollywood',
-        state: 'CA',
-        zip: '56789',
-        residents: {
-          owner: 'Amy Angelo',
-          coowner: 'Daniel Angelo'
+      c1: {
+        d: 'c1_d',
+        e: {
+          f: {
+            g: 'c1_e_f_g'
+          }
         }
       }
     }
   end
   let(:attribute_names) do
-    %i(first_name
-      first_name=
-      last_name
-      last_name=
-      address_street
-      address_street=
-      address_street2
-      address_street2=
-      address_city
-      address_city=
-      address_state
-      address_state=
-      address_zip
-      address_zip=
-      address_residents_owner
-      address_residents_owner=
-      address_residents_coowner
-      address_residents_coowner=
-      address2_street
-      address2_street=
-      address2_street2
-      address2_street2=
-      address2_city
-      address2_city=
-      address2_state
-      address2_state=
-      address2_zip
-      address2_zip=
-      address2_residents_owner
-      address2_residents_owner=
-      address2_residents_coowner
-      address2_residents_coowner=)
+    %i(a b c0_d c0_e_f_g c1_d c1_e_f_g)
     end
 
   let(:options) { { attrs: Deco::AttributeOptionable::MERGE } }
@@ -79,7 +42,17 @@ RSpec.describe Deco::Model do
 
       it 'responds to the correct attributes' do
         expect(attribute_names.all? do |attribute_name|
+          puts "Testing respond_to? :#{attribute_name}..."
           subject.respond_to? attribute_name
+        end).to eq true
+      end
+
+      it 'attributes are assigned the correct values' do
+        expect(attribute_names.all? do |attribute_name|
+          puts "Testing assignment of attribute :#{attribute_name}: " \
+            "expected value: '#{attribute_name}', " \
+            "actual value: '#{subject.public_send(attribute_name)}'"
+          subject.public_send(attribute_name) == attribute_name.to_s
         end).to eq true
       end
 
@@ -87,9 +60,8 @@ RSpec.describe Deco::Model do
         let(:options) { { namespace: :namespace } }
 
         it 'qualifies attribute names with the namespace' do
-          namespace = options[:namespace]
-          expect(subject.attribute_names.all? do |attribute_name|
-            attribute_name.start_with?(namespace.to_s)
+          expect(attribute_names.all? do |attribute_name|
+            subject.respond_to? "#{options[:namespace]}_#{attribute_name}".to_sym
           end).to eq true
         end
       end

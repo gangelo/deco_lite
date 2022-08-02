@@ -3,7 +3,7 @@
 module Deco
   # Defines methods to assign model attribute values dynamically.
   module AttributeValuesAssignable
-    include AttrAccessorCreatable
+    include AttributeAccessorCreatable
 
     def assign_attribute_values(hash:, attribute_info:)
       attribute_info.each do |attribute_name, attr_info|
@@ -14,7 +14,7 @@ module Deco
 
     def assign_attribute_value(attribute_name:, value:)
       # Create our attributes before we send.
-      attr_accessor_create attribute_names: [attribute_name]
+      attribute_accessor_create attribute_names: [attribute_name]
       public_send("#{attribute_name}=", value)
     end
 

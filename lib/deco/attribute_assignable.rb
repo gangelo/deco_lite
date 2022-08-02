@@ -19,7 +19,7 @@ module Deco
     def assign_attribute_value(attribute_name:, value:)
       # Create our attributes before we send.
       create_attribute_accessor attribute_name: attribute_name
-      public_send("#{attribute_name}=", value)
+      send("#{attribute_name}=", value)
     end
   end
 end

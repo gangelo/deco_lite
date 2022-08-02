@@ -30,7 +30,7 @@ module Deco
     def initialize(object:, options: { attrs: Deco::AttributeOptionable::MERGE })
       @attribute_info = {}
 
-      attribute_accessor_create attribute_names: attribute_names
+      create_attribute_accessors attribute_names: attribute_names
 
       load object: object, options: options if object.present?
     end

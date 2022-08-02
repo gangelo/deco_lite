@@ -14,11 +14,7 @@ module Deco
 
       attribute_info = attribute_info_from(hash: hash, field_namespace: options[:namespace])
       @attribute_info.merge!(attribute_info)
-      apply_attribute_values_from_hash(hash: hash, attribute_info: attribute_info)
-    end
-
-    def apply_attribute_values_from_hash(hash:, attribute_info:)
-      assign_attribute_values hash: hash, attribute_info: attribute_info
+      assign_attribute_values(hash: hash, attribute_info: attribute_info)
     end
 
     # Module that defines validators for the parent module.

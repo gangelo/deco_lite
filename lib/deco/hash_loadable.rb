@@ -7,10 +7,9 @@ module Deco
     include AttributeValuesAssignable
 
     def load_hash(hash:, options: {})
-      Validators::validate!(hash: hash, options: options)
+      Validators.validate!(hash: hash, options: options)
 
-      namespace = [options[:namespace]].compact
-      attribute_info = attribute_info_from(hash: hash, namespace: namespace)
+      attribute_info = attribute_info_from(hash: hash, field_namespace: options[:namespace])
       @attribute_info.merge!(attribute_info)
       apply_attribute_values_from_hash(hash: hash, attribute_info: attribute_info)
     end

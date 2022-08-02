@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'attribute_optionable'
+
 module Deco
   # Defines methods and attributes to manage options.
   module Optionable

@@ -27,7 +27,7 @@ module Deco
 
     attr_reader :attribute_info
 
-    def initialize(object:, options: { attrs: Deco::Mixins::AttributeOptionable::MERGE })
+    def initialize(object:, options: { attrs: Deco::AttributeOptionable::MERGE })
       @attribute_info = {}
 
       attr_accessor_create attribute_names: attribute_names

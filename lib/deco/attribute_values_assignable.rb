@@ -18,6 +18,7 @@ module Deco
       public_send("#{attribute_name}=", value)
     end
 
+    # Returns the value of the attribute using fully quaified attribute names.
     def get_attribute_value(hash:, attribute_info:)
       hash.dig(*[attribute_info[:in], attribute_info[:attribute_name]].flatten.compact)
     end

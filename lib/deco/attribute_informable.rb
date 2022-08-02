@@ -34,26 +34,32 @@ module Deco
     #
     # :attribute_name is the actual, unqualified attribute name found in the payload hash sent.
     # :in is the hash key by which :attribute_name can be found in the payload hash if need be.
-    def attribute_info_from(hash:, namespace: [], attribute_name_info: {})
+    def attribute_info_from(hash:, field_namespace:, namespace: [], attribute_name_info: {})
       hash.each do |key, value|
         if value.is_a? Hash
           namespace << key
-          attribute_info_from hash: value, namespace: namespace,
-                              attribute_name_info: attribute_name_info
+          attribute_info_from hash: value, field_namespace: field_namespace,
+                              namespace: namespace, attribute_name_info: attribute_name_info
           namespace.pop
           next
         end
 
         namespace = namespace.dup
-        if namespace.blank?
-          attribute_name_info[key] = { attribute_name: key, in: namespace }
-        else
-          attribute_name_info["#{namespace.join('_')}_#{key}".to_sym] =
-            { attribute_name: key, in: namespace }
-        end
+        field_key = attribute_info_field_key_from(key: key,
+                                                  field_namespace: field_namespace,
+                                                  namespace: namespace)
+        attribute_name_info[field_key] = { attribute_name: key, namespace: namespace }
       end
 
       attribute_name_info
+    end
+
+    def attribute_info_field_key_from(key:, field_namespace:, namespace:)
+      return key if field_namespace.blank? && namespace.blank?
+      return "#{field_namespace}_#{key}".to_sym if namespace.blank?
+      return "#{namespace.join('_')}_#{key}".to_sym if field_namespace.blank?
+
+      "#{field_namespace}_#{namespace.join('_')}_#{key}".to_sym
     end
   end
 end

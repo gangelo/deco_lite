@@ -27,7 +27,7 @@ module Deco
 
     attr_reader :attribute_info
 
-    def initialize(object:, options: { attrs: Deco::Mixins::AttributeOptionable::MERGE })
+    def initialize(object:, options: { attrs: Deco::AttributeOptionable::MERGE })
       @attribute_info = {}
 
       attr_accessor_create attribute_names: attribute_names
@@ -36,7 +36,11 @@ module Deco
     end
 
     def load(object:, options:)
-      load_hash(hash: object, options: options) if object.is_a? Hash
+      if object.is_a?(Hash)
+        load_hash(hash: object, options: options)
+      else
+        raise ArgumentError, "object (#{object.class}) was not handled"
+      end
     end
 
     def attribute_names

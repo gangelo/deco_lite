@@ -20,6 +20,13 @@ RSpec.describe Deco::Optionable, type: :module do
         expect(described_class::OPTIONS).to match_array %i(attrs namespace)
       end
     end
+
+    describe 'OPTION_ATTRS_VALUES' do
+      it 'has the expected options' do
+        expected_array = [Deco::AttributeOptionable::MERGE, Deco::AttributeOptionable::STRICT]
+        expect(described_class::OPTION_ATTRS_VALUES).to match_array expected_array
+      end
+    end
   end
 
   describe 'methods' do

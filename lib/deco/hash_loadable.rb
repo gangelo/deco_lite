@@ -12,7 +12,7 @@ module Deco
     def load_hash(hash:, options: {})
       Validators.validate!(hash: hash, options: options)
 
-      attribute_info = attribute_info_from(hash: hash, field_namespace: options[:namespace])
+      attribute_info = attribute_info_from(hash: hash, namespace: [options[:namespace]])
       @attribute_info.merge!(attribute_info)
       assign_attribute_values(hash: hash, attribute_info: attribute_info)
     end

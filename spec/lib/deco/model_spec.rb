@@ -87,9 +87,8 @@ RSpec.describe Deco::Model do
         let(:options) { { namespace: :namespace } }
 
         it 'qualifies attribute names with the namespace' do
-          namespace = options[:namespace]
-          expect(subject.attribute_names.all? do |attribute_name|
-            attribute_name.start_with?(namespace.to_s)
+          expect(attribute_names.all? do |attribute_name|
+            subject.respond_to? "#{options[:namespace]}_#{attribute_name}".to_sym
           end).to eq true
         end
       end

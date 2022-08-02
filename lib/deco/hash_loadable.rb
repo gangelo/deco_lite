@@ -4,7 +4,7 @@ module Deco
   # Provides methods to load and return information about a given hash.
   module HashLoadable
     include AttributeInformable
-    include AttributeValuesAssignable
+    include AttributeAssignable
 
     def load_hash(hash:, options: {})
       Validators.validate!(hash: hash, options: options)

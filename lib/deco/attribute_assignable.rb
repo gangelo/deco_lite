@@ -2,7 +2,7 @@
 
 module Deco
   # Defines methods to assign model attribute values dynamically.
-  module AttributeValuesAssignable
+  module AttributeAssignable
     include AttributeAccessorCreatable
 
     def assign_attribute_values(hash:, attribute_info:)

@@ -23,9 +23,9 @@ module Deco
     # attribute_info_from(hash: hash) #=>
     #
     # {
-    #   :first_name=>{:attribute_name=>:first_name, :in=>[]},
+    #   :first_name=>{:attribute_name=>:first_name, :namespace=>[]},
     #   ...
-    #   :address_street=>{:attribute_name=>:street, :in=>[:address]},
+    #   :address_street=>{:attribute_name=>:street, :namespace=>[:address]},
     #   ...
     # }
     #
@@ -33,7 +33,7 @@ module Deco
     # them as such.
     #
     # :attribute_name is the actual, unqualified attribute name found in the payload hash sent.
-    # :in is the hash key by which :attribute_name can be found in the payload hash if need be.
+    # :namespace is the hash key by which :attribute_name can be found in the payload hash if need be.
     def attribute_info_from(hash:, field_namespace:, namespace: [], attribute_name_info: {})
       hash.each do |key, value|
         if value.is_a? Hash

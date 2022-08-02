@@ -52,7 +52,7 @@ module Deco
         field_key = [*namespace, key].compact.join('_').to_sym
         attribute_name_info[field_key] = {
           attribute_name: key,
-                                           namespace: namespace.dup
+          namespace: namespace.dup
         }
       end
 

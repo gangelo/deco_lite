@@ -1,13 +1,15 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
-require 'deco'
 require 'pry-byebug'
 require 'simplecov'
+SimpleCov.start
 
 SimpleCov.start do
   add_filter 'spec'
 end
+
+require 'deco'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

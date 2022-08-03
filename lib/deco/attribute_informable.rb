@@ -4,8 +4,6 @@ module Deco
   # Creates and returns a hash given the parameters that are used to
   # dynamically create attributes and assign values to a model.
   module AttributeInformable
-    module_function
-
     # This method simply navigates the payload hash received and creates qualified
     # hash key names that can be used to verify/map to our attribute names in this model.
     # This can be used to qualify nested hash attributes and saves us some headaches
@@ -61,5 +59,13 @@ module Deco
         namespace: namespace.dup
       }
     end
+
+    attr_reader :attribute_info
+
+    private
+
+    attr_writer :attribute_info
+
+    module_function :attribute_info_from, :add_attribute_info_to
   end
 end

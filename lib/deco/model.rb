@@ -2,6 +2,7 @@
 
 require_relative 'attribute_creatable'
 require_relative 'hash_loadable'
+require_relative 'model_nameable'
 require_relative 'optionable'
 
 module Deco
@@ -10,29 +11,14 @@ module Deco
   class Model
     include ActiveModel::Model
     include AttributeCreatable
+    include AttributeRequireable
     include HashLoadable
+    include ModelNameable
 
-    class << self
-      def model_name
-        ActiveModel::Name.new(self, nil, to_s.gsub('::', ''))
-      end
-
-      # Returns the attribute names based on the validators we've set up.
-      def attribute_names
-        @attribute_names ||= validators.filter_map do |validator|
-          validator.attributes.first
-        end&.flatten&.uniq&.sort
-      end
-    end
-
-    validate :validate_attribute_names
-
-    attr_reader :attribute_info
+    validate :validate_required_attributes
 
     def initialize(object:, options: { attrs: Deco::AttributeOptionable::MERGE })
       @attribute_info = {}
-
-      create_attribute_accessors attribute_names: attribute_names
 
       load object: object, options: options if object.present?
     end
@@ -46,19 +32,19 @@ module Deco
     end
 
     def attribute_names
-      (attribute_info.keys + [self.class.attribute_names.presence]).flatten.compact.uniq
+      attribute_info.keys
     end
 
-    private
+    # Validator for attribute names. This validator simply checks to make
+    # sure that the attribute was created, which can only occur if:
+    # A) The attribute was defined on the model explicitly (e.g. attr_accessor :attribute).
+    # B) The attribute was created as a result of loading data dynamically.
+    # :reek:ManualDispatch - methods added dynamically; this is the best way to check.
+    def validate_required_attributes
+      required_attributes.each do |attribute_name|
+        next if respond_to? attribute_name
 
-    attr_writer :attribute_info
-
-    # Validator for attribute names. All attributes (not the presence of data) are required.
-    def validate_attribute_names
-      self.class.attribute_names.each do |attribute_name|
-        next if attribute_info.key? attribute_name
-
-        errors.add(attribute_name, 'attribute is missing', type: missing_required_attribute)
+        errors.add(attribute_name, 'attribute is missing', type: :missing_required_attribute)
       end
     end
   end

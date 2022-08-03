@@ -2,6 +2,7 @@
 
 require_relative 'attribute_creatable'
 require_relative 'hash_loadable'
+require_relative 'model_nameable'
 require_relative 'optionable'
 
 module Deco
@@ -11,12 +12,9 @@ module Deco
     include ActiveModel::Model
     include AttributeCreatable
     include HashLoadable
+    include ModelNameable
 
     class << self
-      def model_name
-        ActiveModel::Name.new(self, nil, to_s.gsub('::', ''))
-      end
-
       # Returns the attribute names based on the validators we've set up.
       def attribute_names
         @attribute_names ||= validators.filter_map do |validator|

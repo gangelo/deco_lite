@@ -25,8 +25,6 @@ module Deco
 
     validate :validate_attribute_names
 
-    attr_reader :attribute_info
-
     def initialize(object:, options: { attrs: Deco::AttributeOptionable::MERGE })
       @attribute_info = {}
 
@@ -46,10 +44,6 @@ module Deco
     def attribute_names
       (attribute_info.keys + [self.class.attribute_names.presence]).flatten.compact.uniq
     end
-
-    private
-
-    attr_writer :attribute_info
 
     # Validator for attribute names. All attributes (not the presence of data) are required.
     def validate_attribute_names

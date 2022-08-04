@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-require_relative 'attribute_assignable'
-require_relative 'attribute_informable'
+require_relative 'field_assignable'
+require_relative 'field_informable'
 
 module Deco
   # Provides methods to load and return information about a given hash.
   module HashLoadable
-    include AttributeAssignable
-    include AttributeInformable
+    include FieldAssignable
+    include FieldInformable
 
     def load_hash(hash:, options: {})
       Validators.validate!(hash: hash, options: options)
 
       namespace = [options[:namespace]].compact
-      attribute_info = attribute_info_from(hash: hash, namespace: namespace)
-      @attribute_info.merge!(attribute_info)
-      assign_attribute_values(hash: hash, attribute_info: attribute_info)
+      field_info = field_info_from(hash: hash, namespace: namespace)
+      @field_info.merge!(field_info)
+      assign_field_values(hash: hash, field_info: field_info)
     end
 
     # Module that defines validators for the parent module.

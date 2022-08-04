@@ -1,21 +1,21 @@
 # frozen_string_literal: true
 
-RSpec.shared_examples 'the attribute values are what they should be' do
-  it 'has the correct attribute values' do
-    expect(attribute_names.all? do |attribute_name|
-      puts "Testing assignment of attribute :#{attribute_name}: " \
-        "expected value: '#{attribute_name}', " \
-        "actual value: '#{subject.public_send(attribute_name)}'"
-      subject.public_send(attribute_name) == attribute_name.to_s
+RSpec.shared_examples 'the field values are what they should be' do
+  it 'has the correct field values' do
+    expect(field_names.all? do |field_name|
+      puts "Testing assignment of field :#{field_name}: " \
+        "expected value: '#{field_name}', " \
+        "actual value: '#{subject.public_send(field_name)}'"
+      subject.public_send(field_name) == field_name.to_s
     end).to eq true
   end
 end
 
-RSpec.shared_examples 'the attributes are defined' do
-  it 'responds to the correct attributes' do
-    expect(attribute_names.all? do |attribute_name|
-      puts "Testing respond_to? :#{attribute_name}..."
-      subject.respond_to? attribute_name
+RSpec.shared_examples 'the fields are defined' do
+  it 'responds to the correct fields' do
+    expect(field_names.all? do |field_name|
+      puts "Testing respond_to? :#{field_name}..."
+      subject.respond_to? field_name
     end).to eq true
   end
 end
@@ -60,11 +60,11 @@ RSpec.describe Deco::Model, type: :model do
       }
     }
   end
-  let(:attribute_names) do
+  let(:field_names) do
     %i(a b c0_d c0_e_f_g c1_d c1_e_f_g)
     end
 
-  let(:options) { { attrs: Deco::AttributeOptionable::MERGE } }
+  let(:options) { { fields: Deco::FieldOptionable::MERGE } }
 
   describe '#initialize' do
     context 'when the arguments are valid' do
@@ -72,15 +72,15 @@ RSpec.describe Deco::Model, type: :model do
         expect { subject }.to_not raise_error
       end
 
-      it_behaves_like 'the attributes are defined'
-      it_behaves_like 'the attribute values are what they should be'
+      it_behaves_like 'the fields are defined'
+      it_behaves_like 'the field values are what they should be'
 
       context 'when passing a namespace' do
         let(:options) { { namespace: :namespace } }
 
-        it 'qualifies attribute names with the namespace' do
-          expect(attribute_names.all? do |attribute_name|
-            subject.respond_to? "#{options[:namespace]}_#{attribute_name}".to_sym
+        it 'qualifies field names with the namespace' do
+          expect(field_names.all? do |field_name|
+            subject.respond_to? "#{options[:namespace]}_#{field_name}".to_sym
           end).to eq true
         end
       end
@@ -96,49 +96,49 @@ RSpec.describe Deco::Model, type: :model do
     end
   end
 
-  describe '#validate_required_attributes' do
+  describe '#validate_required_fields' do
     subject(:deco) do
       Class.new(Deco::Model) do
-        def initialize(object:, options:, required_attributes:)
+        def initialize(object:, options:, required_fields:)
           super(object: object, options: options)
-          @required_attributes = required_attributes
+          @required_fields = required_fields
         end
 
-        def required_attributes
-          @required_attributes
+        def required_fields
+          @required_fields
         end
-      end.new(object: object, options: options, required_attributes: required_attributes)
+      end.new(object: object, options: options, required_fields: required_fields)
     end
 
     before do
       subject.validate
     end
 
-    let(:required_attributes) { [] }
+    let(:required_fields) { [] }
 
-    context 'when #required_attributes is blank?' do
+    context 'when #required_fields is blank?' do
       it_behaves_like 'there are no errors'
     end
 
-    context 'when #required_attributes returns required attributes' do
-      context 'when the required attributes exist' do
-        let(:required_attributes) { attribute_names }
+    context 'when #required_fields is present?' do
+      context 'when the required fields exist' do
+        let(:required_fields) { field_names }
 
         it_behaves_like 'there are no errors'
       end
 
-      context 'when the required attributes do not exist' do
-        let(:required_attributes) do
-          attribute_names.map { |attribute_name| "not_found_#{attribute_name}".to_sym }
+      context 'when the required fields do not exist' do
+        let(:required_fields) do
+          field_names.map { |field_name| "not_found_#{field_name}".to_sym }
         end
         let(:expected_errors) do
           [
-            'Not found a attribute is missing',
-            'Not found b attribute is missing',
-            'Not found c0 d attribute is missing',
-            'Not found c0 e f g attribute is missing',
-            'Not found c1 d attribute is missing',
-            'Not found c1 e f g attribute is missing'
+            'Not found a field is missing',
+            'Not found b field is missing',
+            'Not found c0 d field is missing',
+            'Not found c0 e f g field is missing',
+            'Not found c1 d field is missing',
+            'Not found c1 e f g field is missing'
           ]
         end
 
@@ -150,40 +150,58 @@ RSpec.describe Deco::Model, type: :model do
     end
   end
 
-  describe 'when defining attributes and validators' do
-    context 'when loading attributes that do not conflict with existing attributes' do
-      subject(:deco) do
-        Class.new(Deco::Model) do
-          attr_reader :my_attribute
+  describe '#field_names' do
+    let(:options) { {} }
 
-          private
+    context 'when there are no fields' do
+      let(:object) { {} }
 
-          attr_writer :my_attribute
-        end.new(object: object, options: options)
-      end
-
-      it 'retains the attribute reader/writer methods' do
-        expect(subject).to respond_to :my_attribute
-        expect(subject.private_methods).to include :my_attribute=
+      it 'returns an empty array' do
+        expect(subject.field_names).to eq []
       end
     end
 
-    context 'when loading attributes conflict with existing attributes' do
+    context 'when there are fields' do
+      it 'returns an array of field names' do
+        expect(subject.field_names).to eq field_names
+      end
+    end
+  end
+
+  describe 'when defining fields and validators' do
+    context 'when loading fields that do not conflict with existing fields' do
+      subject(:deco) do
+        Class.new(Deco::Model) do
+          attr_reader :my_field
+
+          private
+
+          attr_writer :my_field
+        end.new(object: object, options: options)
+      end
+
+      it 'retains the field reader/writer methods' do
+        expect(subject).to respond_to :my_field
+        expect(subject.private_methods).to include :my_field=
+      end
+    end
+
+    context 'when loading fields conflict with existing fields' do
       subject(:deco) do
         Class.new(Deco::Model) do
           class << self
-            def attrs
+            def fields
               %i(a b c0_d c0_e_f_g c1_d c1_e_f_g)
             end
           end
 
-          attr_accessor(*attrs)
+          attr_accessor(*fields)
 
         end.new(object: object, options: options)
       end
 
-      it_behaves_like 'the attributes are defined'
-      it_behaves_like 'the attribute values are what they should be'
+      it_behaves_like 'the fields are defined'
+      it_behaves_like 'the field values are what they should be'
     end
   end
 end

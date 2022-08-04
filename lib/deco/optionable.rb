@@ -1,15 +1,15 @@
 # frozen_string_literal: true
 
-require_relative 'attribute_optionable'
+require_relative 'field_optionable'
 
 module Deco
-  # Defines methods and attributes to manage options.
+  # Defines methods and fields to manage options.
   module Optionable
-    OPTIONS = %i[attrs namespace].freeze
-    OPTION_ATTRS_VALUES = [AttributeOptionable::MERGE, AttributeOptionable::STRICT].freeze
+    OPTIONS = %i[fields namespace].freeze
+    OPTION_ATTRS_VALUES = [FieldOptionable::MERGE, FieldOptionable::STRICT].freeze
 
     class << self
-      include Deco::AttributeOptionable
+      include Deco::FieldOptionable
     end
 
     def validate_options!
@@ -18,12 +18,12 @@ module Deco
       return true if options.empty?
 
       validate_option_keys!
-      validate_option_attr!
+      validate_option_field!
       validate_option_namespace!
     end
 
-    def attr
-      options[:attrs] || AttributeOptionable::DEFAULT
+    def field
+      options[:fields] || FieldOptionable::DEFAULT
     end
 
     def namespace
@@ -31,11 +31,11 @@ module Deco
     end
 
     def merge?
-      attr == AttributeOptionable::MERGE
+      field == FieldOptionable::MERGE
     end
 
     def strict?
-      attr == AttributeOptionable::STRICT
+      field == FieldOptionable::STRICT
     end
 
     def namespace?
@@ -51,12 +51,12 @@ module Deco
       raise ArgumentError, "One or more options were unrecognized: #{invalid_options}" unless invalid_options.blank?
     end
 
-    def validate_option_attr!
-      option = attr
+    def validate_option_field!
+      option = field
       return if OPTION_ATTRS_VALUES.include?(option)
 
       raise ArgumentError,
-        "option :attrs value or type is invalid. #{OPTION_ATTRS_VALUES} (Symbol) " \
+        "option :fields value or type is invalid. #{OPTION_ATTRS_VALUES} (Symbol) " \
           "was expected, but '#{option}' (#{option.class}) was received."
     end
 

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'attribute_creatable'
+require_relative 'attribute_requireable'
 require_relative 'hash_loadable'
 require_relative 'model_nameable'
 require_relative 'optionable'

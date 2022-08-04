@@ -35,7 +35,8 @@ end
 RSpec.describe Deco::Model, type: :model do
   subject(:deco) do
     Class.new(Deco::Model) do
-    end.new(object: object, options: options)
+    end.new(options: options)
+       .load(object: object, options: load_options)
   end
 
   let(:object) do
@@ -64,9 +65,18 @@ RSpec.describe Deco::Model, type: :model do
     %i(a b c0_d c0_e_f_g c1_d c1_e_f_g)
     end
 
-  let(:options) { { fields: Deco::FieldOptionable::MERGE } }
+  let(:options) { { fields: Deco::FieldsOptionable::OPTION_FIELDS_MERGE } }
 
   describe '#initialize' do
+    subject(:deco) do
+      Class.new(Deco::Model) do
+      end.new(options: options)
+    end
+  end
+
+  describe '#load' do
+    let(:load_options) { {} }
+
     context 'when the arguments are valid' do
       it 'does not raise an error' do
         expect { subject }.to_not raise_error
@@ -76,11 +86,11 @@ RSpec.describe Deco::Model, type: :model do
       it_behaves_like 'the field values are what they should be'
 
       context 'when passing a namespace' do
-        let(:options) { { namespace: :namespace } }
+        let(:load_options) { { namespace: :namespace } }
 
         it 'qualifies field names with the namespace' do
           expect(field_names.all? do |field_name|
-            subject.respond_to? "#{options[:namespace]}_#{field_name}".to_sym
+            subject.respond_to? "#{load_options[:namespace]}_#{field_name}".to_sym
           end).to eq true
         end
       end
@@ -100,7 +110,7 @@ RSpec.describe Deco::Model, type: :model do
     subject(:deco) do
       Class.new(Deco::Model) do
         def initialize(object:, options:, required_fields:)
-          super(object: object, options: options)
+          super(options: options)
           @required_fields = required_fields
         end
 
@@ -108,6 +118,7 @@ RSpec.describe Deco::Model, type: :model do
           @required_fields
         end
       end.new(object: object, options: options, required_fields: required_fields)
+        .load(object: object)
     end
 
     before do
@@ -151,7 +162,7 @@ RSpec.describe Deco::Model, type: :model do
   end
 
   describe '#field_names' do
-    let(:options) { {} }
+    let(:load_options) { {} }
 
     context 'when there are no fields' do
       let(:object) { {} }
@@ -177,7 +188,7 @@ RSpec.describe Deco::Model, type: :model do
           private
 
           attr_writer :my_field
-        end.new(object: object, options: options)
+        end.new(options: options).load(object: object)
       end
 
       it 'retains the field reader/writer methods' do
@@ -197,7 +208,8 @@ RSpec.describe Deco::Model, type: :model do
 
           attr_accessor(*fields)
 
-        end.new(object: object, options: options)
+        end.new(options: options)
+          .load(object: object)
       end
 
       it_behaves_like 'the fields are defined'

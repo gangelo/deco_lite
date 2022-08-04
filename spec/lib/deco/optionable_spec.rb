@@ -10,21 +10,21 @@ RSpec.describe Deco::Optionable, type: :module do
   end
 
   let(:options) { {} }
-  let(:options_merge) { { fields: Deco::FieldOptionable::MERGE } }
-  let(:options_strict) { { fields: Deco::FieldOptionable::STRICT } }
+  let(:options_merge) { { fields: Deco::FieldsOptionable::OPTION_FIELDS_MERGE } }
+  let(:options_strict) { { fields: Deco::FieldsOptionable::OPTION_FIELDS_STRICT } }
   let(:options_namespace) { { namespace: :namespace } }
 
   describe 'constants' do
     describe 'OPTIONS' do
       it 'has the expected options' do
-        expect(described_class::OPTIONS).to match_array %i(fields namespace)
+        expect(Deco::OptionsValidatable::OPTIONS).to match_array %i(fields namespace)
       end
     end
 
-    describe 'OPTION_ATTRS_VALUES' do
+    describe 'OPTION_FIELDS_VALUES' do
       it 'has the expected options' do
-        expected_array = [Deco::FieldOptionable::MERGE, Deco::FieldOptionable::STRICT]
-        expect(described_class::OPTION_ATTRS_VALUES).to match_array expected_array
+        expected_array = [Deco::FieldsOptionable::OPTION_FIELDS_MERGE, Deco::FieldsOptionable::OPTION_FIELDS_STRICT]
+        expect(described_class::OPTION_FIELDS_VALUES).to match_array expected_array
       end
     end
   end
@@ -46,7 +46,7 @@ RSpec.describe Deco::Optionable, type: :module do
     describe '#field' do
       context 'when not set' do
         it 'returns the default value' do
-          expect(optionable_klass.new(options).field).to eq Deco::FieldOptionable::DEFAULT
+          expect(optionable_klass.new(options).field).to eq Deco::FieldsOptionable::OPTION_FIELDS_DEFAULT
         end
       end
     end
@@ -74,7 +74,7 @@ RSpec.describe Deco::Optionable, type: :module do
 
       context 'when nil' do
         it 'returns the default merge value' do
-          expect(optionable_klass.new(options).field).to eq Deco::FieldOptionable::DEFAULT
+          expect(optionable_klass.new(options).field).to eq Deco::FieldsOptionable::OPTION_FIELDS_DEFAULT
         end
       end
     end
@@ -110,7 +110,7 @@ RSpec.describe Deco::Optionable, type: :module do
         end
         let(:expected_error) do
           'One or more options were unrecognized: ' \
-            "#{options.except(*described_class::OPTIONS)&.keys}"
+            "#{options.except(*Deco::OptionsValidatable::OPTIONS)&.keys}"
         end
 
         it 'raises an error' do
@@ -136,9 +136,16 @@ RSpec.describe Deco::Optionable, type: :module do
         end
 
         context 'when option :namespace is the wrong type' do
+          let(:options) do
+            {
+              fields: Deco::FieldsOptionable::OPTION_FIELDS_DEFAULT,
+              namespace: 'wrong type'
+            }
+          end
+
           it 'raises an error' do
             expect do
-              optionable_klass.new({ namespace: 'wrong type' }).validate_options!
+              optionable_klass.new(options).validate_options!
             end.to raise_error(/option :namespace value or type is invalid/)
           end
         end

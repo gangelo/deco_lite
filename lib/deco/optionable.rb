@@ -1,29 +1,33 @@
 # frozen_string_literal: true
 
-require_relative 'field_optionable'
+require_relative 'fields_optionable'
+require_relative 'namespace_optionable'
+require_relative 'options_defaultable'
+require_relative 'options_validatable'
 
 module Deco
   # Defines methods and fields to manage options.
   module Optionable
-    OPTIONS = %i[fields namespace].freeze
-    OPTION_ATTRS_VALUES = [FieldOptionable::MERGE, FieldOptionable::STRICT].freeze
+    include Deco::FieldsOptionable
+    include Deco::NamespaceOptionable
+    include Deco::OptionsDefaultable
 
     class << self
-      include Deco::FieldOptionable
+      def included(base)
+        base.extend(Deco::OptionsValidatable)
+      end
+    end
+
+    def options
+      @options&.dup || OptionsDefaultable::DEFAULT_OPTIONS
     end
 
     def validate_options!
-      raise ArgumentError, 'options is not a Hash' unless options.is_a? Hash
-
-      return true if options.empty?
-
-      validate_option_keys!
-      validate_option_field!
-      validate_option_namespace!
+      self.class.validate_options! options: options
     end
 
     def field
-      options[:fields] || FieldOptionable::DEFAULT
+      options[:fields] || FieldsOptionable::OPTION_FIELDS_DEFAULT
     end
 
     def namespace
@@ -31,11 +35,11 @@ module Deco
     end
 
     def merge?
-      field == FieldOptionable::MERGE
+      field == FieldsOptionable::OPTION_FIELDS_MERGE
     end
 
     def strict?
-      field == FieldOptionable::STRICT
+      field == FieldsOptionable::OPTION_FIELDS_STRICT
     end
 
     def namespace?
@@ -44,28 +48,16 @@ module Deco
 
     private
 
-    attr_accessor :options
+    def options=(value)
+      options = options_merge value
+      self.class.validate_options! options: options
 
-    def validate_option_keys!
-      invalid_options = options.except(*OPTIONS)&.keys
-      raise ArgumentError, "One or more options were unrecognized: #{invalid_options}" unless invalid_options.blank?
+      @options = options
     end
 
-    def validate_option_field!
-      option = field
-      return if OPTION_ATTRS_VALUES.include?(option)
-
-      raise ArgumentError,
-        "option :fields value or type is invalid. #{OPTION_ATTRS_VALUES} (Symbol) " \
-          "was expected, but '#{option}' (#{option.class}) was received."
-    end
-
-    def validate_option_namespace!
-      option = options[:namespace]
-      return if option.is_a?(Symbol)
-
-      raise ArgumentError, 'option :namespace value or type is invalid. A Symbol was expected, ' \
-        "but '#{option}' (#{option.class}) was received."
+    def options_merge(options)
+      options ||= {}
+      DEFAULT_OPTIONS.merge(options)
     end
   end
 end

@@ -15,21 +15,28 @@ module Deco
     include FieldRequireable
     include HashLoadable
     include ModelNameable
+    include Optionable
 
     validate :validate_required_fields
 
-    def initialize(object:, options: { fields: Deco::FieldOptionable::MERGE })
+    def initialize(options: {})
       @field_info = {}
-
-      load object: object, options: options if object.present?
+      self.options = DEFAULT_OPTIONS.merge options
     end
 
-    def load(object:, options:)
+    def load(object:, options: {})
+      # Merge in the default options passed via calling #initialize;
+      # these will replace any options not passed to this method.
+      options = self.options.merge options
+      self.class.validate_options! options: options
+
       if object.is_a?(Hash)
         load_hash(hash: object, options: options)
       else
         raise ArgumentError, "object (#{object.class}) was not handled"
       end
+
+      self
     end
 
     def field_names

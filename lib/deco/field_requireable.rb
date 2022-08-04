@@ -14,5 +14,22 @@ module Deco
       # @required_fields ||= []
       []
     end
+
+    # Validator for field names. This validator simply checks to make
+    # sure that the field was created, which can only occur if:
+    # A) The field was defined on the model explicitly (e.g. attr_accessor :field).
+    # B) The field was created as a result of loading data dynamically.
+    def validate_required_fields
+      required_fields.each do |field_name|
+        next if required_field_exist? field_name: field_name
+
+        errors.add(field_name, 'field is missing', type: :missing_required_field)
+      end
+    end
+
+    # :reek:ManualDispatch - method added dynamically; this is the best way to check.
+    def required_field_exist?(field_name:)
+      respond_to?(field_name) && respond_to?("#{field_name}=".to_sym)
+    end
   end
 end

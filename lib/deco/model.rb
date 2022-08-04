@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require_relative 'attribute_creatable'
-require_relative 'attribute_requireable'
+require_relative 'field_creatable'
+require_relative 'field_requireable'
 require_relative 'hash_loadable'
 require_relative 'model_nameable'
 require_relative 'optionable'
@@ -11,15 +11,15 @@ module Deco
   # dynamic models that can be used as decorators.
   class Model
     include ActiveModel::Model
-    include AttributeCreatable
-    include AttributeRequireable
+    include FieldCreatable
+    include FieldRequireable
     include HashLoadable
     include ModelNameable
 
-    validate :validate_required_attributes
+    validate :validate_required_fields
 
-    def initialize(object:, options: { attrs: Deco::AttributeOptionable::MERGE })
-      @attribute_info = {}
+    def initialize(object:, options: { fields: Deco::FieldOptionable::MERGE })
+      @field_info = {}
 
       load object: object, options: options if object.present?
     end
@@ -32,20 +32,20 @@ module Deco
       end
     end
 
-    def attribute_names
-      attribute_info.keys
+    def field_names
+      field_info.keys
     end
 
-    # Validator for attribute names. This validator simply checks to make
-    # sure that the attribute was created, which can only occur if:
-    # A) The attribute was defined on the model explicitly (e.g. attr_accessor :attribute).
-    # B) The attribute was created as a result of loading data dynamically.
+    # Validator for field names. This validator simply checks to make
+    # sure that the field was created, which can only occur if:
+    # A) The field was defined on the model explicitly (e.g. attr_accessor :field).
+    # B) The field was created as a result of loading data dynamically.
     # :reek:ManualDispatch - methods added dynamically; this is the best way to check.
-    def validate_required_attributes
-      required_attributes.each do |attribute_name|
-        next if respond_to? attribute_name
+    def validate_required_fields
+      required_fields.each do |field_name|
+        next if respond_to? field_name
 
-        errors.add(attribute_name, 'attribute is missing', type: :missing_required_attribute)
+        errors.add(field_name, 'field is missing', type: :missing_required_field)
       end
     end
   end

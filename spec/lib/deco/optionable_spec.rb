@@ -10,20 +10,20 @@ RSpec.describe Deco::Optionable, type: :module do
   end
 
   let(:options) { {} }
-  let(:options_merge) { { attrs: Deco::AttributeOptionable::MERGE } }
-  let(:options_strict) { { attrs: Deco::AttributeOptionable::STRICT } }
+  let(:options_merge) { { fields: Deco::FieldOptionable::MERGE } }
+  let(:options_strict) { { fields: Deco::FieldOptionable::STRICT } }
   let(:options_namespace) { { namespace: :namespace } }
 
   describe 'constants' do
     describe 'OPTIONS' do
       it 'has the expected options' do
-        expect(described_class::OPTIONS).to match_array %i(attrs namespace)
+        expect(described_class::OPTIONS).to match_array %i(fields namespace)
       end
     end
 
     describe 'OPTION_ATTRS_VALUES' do
       it 'has the expected options' do
-        expected_array = [Deco::AttributeOptionable::MERGE, Deco::AttributeOptionable::STRICT]
+        expected_array = [Deco::FieldOptionable::MERGE, Deco::FieldOptionable::STRICT]
         expect(described_class::OPTION_ATTRS_VALUES).to match_array expected_array
       end
     end
@@ -51,7 +51,7 @@ RSpec.describe Deco::Optionable, type: :module do
 
       context 'when nil' do
         it 'returns the default merge value' do
-          expect(optionable_klass.new(options).attr).to eq Deco::AttributeOptionable::DEFAULT
+          expect(optionable_klass.new(options).field).to eq Deco::FieldOptionable::DEFAULT
         end
       end
     end
@@ -96,19 +96,19 @@ RSpec.describe Deco::Optionable, type: :module do
       end
 
       context 'with invalid option values' do
-        context 'when option :attrs is the wrong type' do
+        context 'when option :fields is the wrong type' do
           it 'raises an error' do
             expect do
-              optionable_klass.new({ attrs: 'wrong type' }).validate_options!
-            end.to raise_error(/option :attrs value or type is invalid/)
+              optionable_klass.new({ fields: 'wrong type' }).validate_options!
+            end.to raise_error(/option :fields value or type is invalid/)
           end
         end
 
-        context 'when option :attrs is the wrong value' do
+        context 'when option :fields is the wrong value' do
           it 'raises an error' do
             expect do
-              optionable_klass.new({ attrs: :wrong_value }).validate_options!
-            end.to raise_error(/option :attrs value or type is invalid/)
+              optionable_klass.new({ fields: :wrong_value }).validate_options!
+            end.to raise_error(/option :fields value or type is invalid/)
           end
         end
 

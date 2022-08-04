@@ -120,7 +120,7 @@ RSpec.describe Deco::Model, type: :model do
       it_behaves_like 'there are no errors'
     end
 
-    context 'when #required_fields returns required fields' do
+    context 'when #required_fields is present?' do
       context 'when the required fields exist' do
         let(:required_fields) { field_names }
 
@@ -146,6 +146,24 @@ RSpec.describe Deco::Model, type: :model do
           expect(subject.errors.any?).to eq true
           expect(subject.errors.full_messages).to match_array expected_errors
         end
+      end
+    end
+  end
+
+  describe '#field_names' do
+    let(:options) { {} }
+
+    context 'when there are no fields' do
+      let(:object) { {} }
+
+      it 'returns an empty array' do
+        expect(subject.field_names).to eq []
+      end
+    end
+
+    context 'when there are fields' do
+      it 'returns an array of field names' do
+        expect(subject.field_names).to eq field_names
       end
     end
   end

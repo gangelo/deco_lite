@@ -43,6 +43,29 @@ RSpec.describe Deco::Optionable, type: :module do
       expect(subject.private_methods).to include :options=
     end
 
+    describe '#field' do
+      context 'when not set' do
+        it 'returns the default value' do
+          expect(optionable_klass.new(options).field).to eq Deco::FieldOptionable::DEFAULT
+        end
+      end
+    end
+
+    describe '#namespace' do
+      context 'when set' do
+        it 'returns the value' do
+          namespace = options_namespace[:namespace]
+          expect(optionable_klass.new(options_namespace).namespace).to eq namespace
+        end
+      end
+
+      context 'when not set' do
+        it 'returns nil' do
+          expect(optionable_klass.new(options).namespace).to be_nil
+        end
+      end
+    end
+
     describe '#merge?' do
       it 'returns the correct value' do
         expect(optionable_klass.new(options_merge).merge?).to eq true

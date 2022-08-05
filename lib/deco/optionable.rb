@@ -19,7 +19,7 @@ module Deco
     end
 
     def options
-      @options&.dup || OptionsDefaultable::DEFAULT_OPTIONS
+      @options&.dup || options_with_defaults(options: {})
     end
 
     def validate_options!
@@ -27,37 +27,39 @@ module Deco
     end
 
     def field
-      options[:fields] || FieldsOptionable::OPTION_FIELDS_DEFAULT
+      key = OPTION_FIELDS
+      options[key] || OPTION_FIELDS_DEFAULT
     end
 
     def namespace
-      options[:namespace]
+      key = OPTION_NAMESPACE
+      options[key] || OPTION_NAMESPACE_DEFAULT
     end
 
     def merge?
-      field == FieldsOptionable::OPTION_FIELDS_MERGE
+      field == OPTION_FIELDS_MERGE
     end
 
     def strict?
-      field == FieldsOptionable::OPTION_FIELDS_STRICT
+      field == OPTION_FIELDS_STRICT
     end
 
     def namespace?
-      options[:namespace].present?
+      key = OPTION_NAMESPACE
+      options[key].present?
     end
 
     private
 
     def options=(value)
-      options = options_merge value
-      self.class.validate_options! options: options
+      self.class.validate_options! options: value
 
       @options = options
     end
 
-    def options_merge(options)
+    def options_with_defaults(options:, defaults: DEFAULT_OPTIONS)
       options ||= {}
-      DEFAULT_OPTIONS.merge(options)
+      defaults.merge(options)
     end
   end
 end

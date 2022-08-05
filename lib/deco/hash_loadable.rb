@@ -26,7 +26,7 @@ module Deco
     end
 
     def load_hash_field_info_for(hash:, options:)
-      namespace = [options[:namespace]].compact
+      namespace = options[:namespace]
       field_info_from(hash: hash, namespace: namespace)
     end
 

@@ -21,13 +21,21 @@ module Deco
 
     def initialize(options: {})
       @field_info = {}
-      self.options = DEFAULT_OPTIONS.merge options
+      # Accept whatever options are sent, but make sure
+      # we have defaults set up. #options_with_defaults
+      # will merge options into OptionsDefaultable::DEFAULT_OPTIONS
+      # so we have defaults for any options not passed in through
+      # options.
+      self.options = options_with_defaults options: options
     end
 
     def load(object:, options: {})
-      # Merge in the default options passed via calling #initialize;
-      # these will replace any options not passed to this method.
-      options = self.options.merge options
+      # Merge options into the default options passed through the
+      # constructor; these will override any options passed in when
+      # this object was created, allowing us to retain any defaut
+      # options while loading, but also provide option customization
+      # of options when needed.
+      options = options_with_defaults options: options, defaults: self.options
       self.class.validate_options! options: options
 
       if object.is_a?(Hash)

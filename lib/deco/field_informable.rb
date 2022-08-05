@@ -23,9 +23,9 @@ module Deco
     # field_info_from(hash: hash) #=>
     #
     # {
-    #   :first_name=>{:field_name=>:first_name, :namespace=>[]},
+    #   :first_name=>{:field_name=>:first_name, :dig=>[]},
     #   ...
-    #   :address_street=>{:field_name=>:street, :namespace=>[:address]},
+    #   :address_street=>{:field_name=>:street, :dig=>[:address]},
     #   ...
     # }
     #
@@ -33,30 +33,32 @@ module Deco
     # them as such.
     #
     # :field_name is the actual, unqualified field name found in the payload hash sent.
-    # :namespace is the hash key by which :field_name can be found in the payload hash if need be -
+    # :dig is the hash key by which :field_name can be found in the payload hash if need be -
     #   retained across recursive calls.
-    def field_info_from(hash:, namespace: [], field_info: {})
+    def field_info_from(hash:, namespace: nil, dig: [], field_info: {})
       hash.each do |key, value|
         if value.is_a? Hash
           field_info_from hash: value,
-                              namespace: namespace << key,
-                              field_info: field_info
-          namespace.pop
+                          namespace: namespace,
+                          dig: dig << key,
+                          field_info: field_info
+          dig.pop
         else
           add_field_info_to(field_info: field_info,
-                                key: key,
-                                namespace: namespace)
+                            key: key,
+                            namespace: namespace,
+                            dig: dig)
         end
       end
 
       field_info
     end
 
-    def add_field_info_to(field_info:, key:, namespace:)
-      field_key = [*namespace, key].compact.join('_').to_sym
+    def add_field_info_to(field_info:, key:, namespace:, dig:)
+      field_key = [namespace, *dig, key].compact.join('_').to_sym
       field_info[field_key] = {
         field_name: key,
-        namespace: namespace.dup
+        dig: dig.dup
       }
     end
 

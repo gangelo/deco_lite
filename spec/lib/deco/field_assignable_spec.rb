@@ -5,36 +5,21 @@ RSpec.shared_examples 'the field was created' do
 end
 
 RSpec.describe Deco::FieldAssignable, type: :module do
+  include_context 'loadable objects'
+
   subject(:klass) do
     class AwesomeKlass
       include Deco::FieldAssignable
     end.new
   end
-
-  let(:hash) do
-    {
-      a: {
-        b: {
-          c: {
-            field: 'field data'
-          }
-        }
-      }
-    }
-  end
-  let(:field_info) do
-    {
-      a_b_c_field: { field_name: :field, namespace: %i(a b c)}
-    }
-  end
-  let(:field_name) { field_info.first[1][:field_name] }
-  let(:namespace) { field_info.first[1][:namespace] }
-  let(:field_value) { hash.dig(*namespace, field_name) }
-  let(:namespaced_field_name) { field_info.first[0] }
+  let(:field_name) { loadable_hash_field_info.first[1][:field_name] }
+  let(:dig) { loadable_hash_field_info.first[1][:dig] }
+  let(:field_value) { loadable_hash.dig(*dig, field_name) }
+  let(:namespaced_field_name) { loadable_hash_field_info.first[0] }
 
   describe '#assign_field_values' do
     before do
-      subject.assign_field_values(hash: hash, field_info: field_info)
+      subject.assign_field_values(hash: loadable_hash, field_info: loadable_hash_field_info)
     end
 
     it_behaves_like 'the field was created'

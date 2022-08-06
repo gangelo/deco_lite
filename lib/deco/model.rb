@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'field_creatable'
 require_relative 'field_requireable'
 require_relative 'hash_loadable'
 require_relative 'model_nameable'
@@ -11,7 +10,6 @@ module Deco
   # dynamic models that can be used as decorators.
   class Model
     include ActiveModel::Model
-    include FieldCreatable
     include FieldRequireable
     include HashLoadable
     include ModelNameable

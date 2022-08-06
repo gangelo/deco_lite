@@ -33,13 +33,6 @@ RSpec.describe Deco::FieldInformable, type: :module do
       end
 
       let(:namespace) { :namespace }
-      # let(:namespaced_loadable_hash_field_info) do
-      #   old_key loadable_hash_field_info.keys.first
-      #   new_key = "#{namespace}_#{old_key}".to_sym
-      #   loadable_hash_field_info[new_key] = loadable_hash_field_info.delete old_key
-      #   loadable_hash_field_info
-      # end
-
       it 'returns the correct field info' do
         field_info = subject.test_field_info_from(hash: loadable_hash, namespace: namespace)
         expect(field_info).to eq loadable_hash_field_info

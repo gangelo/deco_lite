@@ -36,10 +36,10 @@ RSpec.describe Deco::Model, type: :model do
   subject(:deco) do
     Class.new(Deco::Model) do
     end.new(options: options)
-       .load(object: object, options: load_options)
+       .load(hash: hash, options: load_options)
   end
 
-  let(:object) do
+  let(:hash) do
     {
       a: 'a',
       b: 'b',
@@ -63,7 +63,7 @@ RSpec.describe Deco::Model, type: :model do
   end
   let(:field_names) do
     %i(a b c0_d c0_e_f_g c1_d c1_e_f_g)
-    end
+  end
 
   let(:options) { { fields: Deco::FieldsOptionable::OPTION_FIELDS_MERGE } }
 
@@ -71,6 +71,12 @@ RSpec.describe Deco::Model, type: :model do
     subject(:deco) do
       Class.new(Deco::Model) do
       end.new(options: options)
+    end
+
+    context 'with valid options' do
+      it 'does not raise an error' do
+        expect { subject }.to_not raise_error
+      end
     end
   end
 
@@ -98,8 +104,8 @@ RSpec.describe Deco::Model, type: :model do
 
     context 'when the arguments are invalid' do
       context 'when the object type is not handled' do
-        let(:object) { :not_handled }
-        let(:expected_error) { "object (#{object.class}) was not handled" }
+        let(:hash) { :not_handled }
+        let(:expected_error) { "hash is not a Hash" }
 
         it_behaves_like 'an error is raised'
       end
@@ -109,7 +115,7 @@ RSpec.describe Deco::Model, type: :model do
   describe '#validate_required_fields' do
     subject(:deco) do
       Class.new(Deco::Model) do
-        def initialize(object:, options:, required_fields:)
+        def initialize(hash:, options:, required_fields:)
           super(options: options)
           @required_fields = required_fields
         end
@@ -117,8 +123,8 @@ RSpec.describe Deco::Model, type: :model do
         def required_fields
           @required_fields
         end
-      end.new(object: object, options: options, required_fields: required_fields)
-        .load(object: object)
+      end.new(hash: hash, options: options, required_fields: required_fields)
+        .load(hash: hash)
     end
 
     before do
@@ -165,7 +171,7 @@ RSpec.describe Deco::Model, type: :model do
     let(:load_options) { {} }
 
     context 'when there are no fields' do
-      let(:object) { {} }
+      let(:hash) { {} }
 
       it 'returns an empty array' do
         expect(subject.field_names).to eq []
@@ -188,7 +194,7 @@ RSpec.describe Deco::Model, type: :model do
           private
 
           attr_writer :my_field
-        end.new(options: options).load(object: object)
+        end.new(options: options).load(hash: hash)
       end
 
       it 'retains the field reader/writer methods' do
@@ -209,7 +215,7 @@ RSpec.describe Deco::Model, type: :model do
           attr_accessor(*fields)
 
         end.new(options: options)
-          .load(object: object)
+          .load(hash: hash)
       end
 
       it_behaves_like 'the fields are defined'

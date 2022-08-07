@@ -27,7 +27,7 @@ module Deco
       self.options = options_with_defaults options: options
     end
 
-    def load(object:, options: {})
+    def load(hash:, options: {})
       # Merge options into the default options passed through the
       # constructor; these will override any options passed in when
       # this object was created, allowing us to retain any defaut
@@ -36,12 +36,7 @@ module Deco
       options = options_with_defaults options: options, defaults: self.options
       self.class.validate_options! options: options
 
-      hash = object.try(:to_h)
-      if hash
-        load_hash(hash: hash, options: options)
-      else
-        raise ArgumentError, "object (#{object.class}) was not handled"
-      end
+      load_hash(hash: hash, options: options)
 
       self
     end

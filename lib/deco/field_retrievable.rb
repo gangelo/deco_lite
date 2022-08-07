@@ -6,7 +6,7 @@ module Deco
     module_function
 
     # Returns the value of the field using fully quaified field names.
-    def retrieve_field_value(hash:, field_info:)
+    def get_field_value(hash:, field_info:)
       hash.dig(*[field_info[:dig], field_info[:field_name]].flatten.compact)
     end
   end

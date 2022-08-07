@@ -6,11 +6,11 @@ RSpec.describe Deco::FieldInformable, type: :module do
       include Deco::FieldInformable
 
       def test_field_info_from(hash:, namespace: [])
-        field_info_from(hash: hash, namespace: namespace)
+        get_field_info(hash: hash, namespace: namespace)
       end
 
       def test_add_field_info_to(field_info:, key:, namespace:, dig:)
-        add_field_info_to(field_info: field_info,
+        set_field_info!(field_info: field_info,
                           key: key,
                           namespace: namespace,
                           dig: dig)
@@ -20,7 +20,7 @@ RSpec.describe Deco::FieldInformable, type: :module do
 
   let(:namespace) { nil }
 
-  describe '#field_info_from' do
+  describe '#get_field_info' do
     context 'with no namespace' do
       it 'returns the correct field info' do
         field_info = subject.test_field_info_from(hash: loadable_hash, namespace: namespace)
@@ -43,7 +43,7 @@ RSpec.describe Deco::FieldInformable, type: :module do
     end
   end
 
-  describe '#add_field_info_to' do
+  describe '#set_field_info!' do
     before do
       subject.test_add_field_info_to(field_info: field_info,
                                      key: :field_name,

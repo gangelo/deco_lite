@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'active_model'
 require_relative 'field_requireable'
 require_relative 'hash_loadable'
 require_relative 'model_nameable'
@@ -27,7 +28,7 @@ module Deco
       self.options = options_with_defaults options: options
     end
 
-    def load(object:, options: {})
+    def load(hash:, options: {})
       # Merge options into the default options passed through the
       # constructor; these will override any options passed in when
       # this object was created, allowing us to retain any defaut
@@ -36,17 +37,9 @@ module Deco
       options = options_with_defaults options: options, defaults: self.options
       self.class.validate_options! options: options
 
-      if object.is_a?(Hash)
-        load_hash(hash: object, options: options)
-      else
-        raise ArgumentError, "object (#{object.class}) was not handled"
-      end
+      load_hash(hash: hash, options: options)
 
       self
-    end
-
-    def field_names
-      field_info.keys
     end
   end
 end

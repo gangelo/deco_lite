@@ -54,7 +54,7 @@ module Deco
     def options=(value)
       self.class.validate_options! options: value
 
-      @options = options
+      @options = value.dup
     end
 
     def options_with_defaults(options:, defaults: DEFAULT_OPTIONS)

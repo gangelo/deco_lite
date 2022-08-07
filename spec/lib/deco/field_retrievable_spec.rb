@@ -19,8 +19,8 @@ RSpec.describe Deco::FieldRetrievable, type: :module do
   end
 
   describe '#retrieve_field_value' do
-    it 'does not respond_to?' do
-      expect(subject).to_not respond_to :retrieve_field_value
+    it 'is private' do
+      expect(subject.private_methods).to include :retrieve_field_value
     end
   end
 end

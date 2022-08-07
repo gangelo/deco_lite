@@ -66,6 +66,10 @@ module Deco
       @field_info.merge!(field_info)
     end
 
+    def field_names
+      field_info.keys
+    end
+
     attr_reader :field_info
 
     private

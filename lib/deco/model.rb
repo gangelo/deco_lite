@@ -40,9 +40,5 @@ module Deco
 
       self
     end
-
-    def field_names
-      field_info.keys
-    end
   end
 end

@@ -34,10 +34,9 @@ module Deco
       # this object was created, allowing us to retain any defaut
       # options while loading, but also provide option customization
       # of options when needed.
-      options = options_with_defaults options: options, defaults: self.options
-      self.class.validate_options! options: options
+      options = Options.new(options: options_with_defaults(options: options, defaults: self.options))
 
-      load_hash(hash: hash, options: options)
+      load_hash(hash: hash, options: options.options)
 
       self
     end

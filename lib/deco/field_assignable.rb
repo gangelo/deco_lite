@@ -9,14 +9,14 @@ module Deco
     include FieldCreatable
     include FieldRetrievable
 
-    def assign_field_values(hash:, field_info:)
+    def set_field_values(hash:, field_info:)
       field_info.each do |name, info|
-        value = retrieve_field_value(hash: hash, field_info: info)
-        assign_field_value(field_name: name, value: value)
+        value = get_field_value(hash: hash, field_info: info)
+        set_field_value(field_name: name, value: value)
       end
     end
 
-    def assign_field_value(field_name:, value:)
+    def set_field_value(field_name:, value:)
       # Create our fields before we send.
       create_field_accessor field_name: field_name
       send("#{field_name}=", value)

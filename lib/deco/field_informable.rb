@@ -62,12 +62,16 @@ module Deco
       }
     end
 
+    def merge_field_info!(field_info:)
+      @field_info.merge!(field_info)
+    end
+
     attr_reader :field_info
 
     private
 
     attr_writer :field_info
 
-    module_function :field_info_from, :add_field_info_to
+    module_function :field_info_from, :add_field_info_to, :merge_field_info!
   end
 end

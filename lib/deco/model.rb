@@ -36,8 +36,9 @@ module Deco
       options = options_with_defaults options: options, defaults: self.options
       self.class.validate_options! options: options
 
-      if object.is_a?(Hash)
-        load_hash(hash: object, options: options)
+      hash = object.try(:to_h)
+      if hash
+        load_hash(hash: hash, options: options)
       else
         raise ArgumentError, "object (#{object.class}) was not handled"
       end

@@ -67,7 +67,7 @@ module Deco
     end
 
     def field_names
-      field_info.keys
+      field_info&.keys || []
     end
 
     attr_reader :field_info

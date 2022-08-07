@@ -20,7 +20,7 @@ module Deco
     #   }
     # }
     #
-    # field_info_from(hash: hash) #=>
+    # get_field_info(hash: hash) #=>
     #
     # {
     #   :first_name=>{:field_name=>:first_name, :dig=>[]},
@@ -35,16 +35,16 @@ module Deco
     # :field_name is the actual, unqualified field name found in the payload hash sent.
     # :dig is the hash key by which :field_name can be found in the payload hash if need be -
     #   retained across recursive calls.
-    def field_info_from(hash:, namespace: nil, dig: [], field_info: {})
+    def get_field_info(hash:, namespace: nil, dig: [], field_info: {})
       hash.each do |key, value|
         if value.is_a? Hash
-          field_info_from hash: value,
+          get_field_info hash: value,
                           namespace: namespace,
                           dig: dig << key,
                           field_info: field_info
           dig.pop
         else
-          add_field_info_to(field_info: field_info,
+          set_field_info!(field_info: field_info,
                             key: key,
                             namespace: namespace,
                             dig: dig)
@@ -54,7 +54,7 @@ module Deco
       field_info
     end
 
-    def add_field_info_to(field_info:, key:, namespace:, dig:)
+    def set_field_info!(field_info:, key:, namespace:, dig:)
       field_key = [namespace, *dig, key].compact.join('_').to_sym
       field_info[field_key] = {
         field_name: key,
@@ -76,6 +76,6 @@ module Deco
 
     attr_writer :field_info
 
-    module_function :field_info_from, :add_field_info_to, :merge_field_info!
+    module_function :get_field_info, :set_field_info!, :merge_field_info!
   end
 end

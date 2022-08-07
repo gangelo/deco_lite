@@ -16,7 +16,7 @@ module Deco
 
       return if hash.blank?
 
-      field_info = field_info_from(hash: hash, namespace: options[:namespace])
+      field_info = get_field_info(hash: hash, namespace: options[:namespace])
       assign_field_values(hash: hash, field_info: field_info)
       merge_field_info! field_info: field_info
     end

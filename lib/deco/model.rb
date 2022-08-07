@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require 'active_model'
 require_relative 'field_requireable'
 require_relative 'hash_loadable'
 require_relative 'model_nameable'

@@ -1,7 +1,7 @@
 RSpec.describe Deco::Options do
-  subject(:options) { described_class.new(options_hash: options_hash) }
+  subject(:klass) { described_class.new(options: options) }
 
-  let(:options_hash) { nil }
+  let(:options) { nil }
   let(:default_options) { Deco::OptionsDefaultable::DEFAULT_OPTIONS }
 
   describe '#initialize' do
@@ -16,7 +16,7 @@ RSpec.describe Deco::Options do
     end
 
     context 'when passing no arguments' do
-      let(:options_hash) do
+      let(:options) do
         {
           Deco::FieldsOptionable::OPTION_FIELDS =>
             Deco::FieldsOptionable::OPTION_FIELDS_VALUES
@@ -27,7 +27,7 @@ RSpec.describe Deco::Options do
       end
 
       it 'copies the options passed to it' do
-        expect(subject.options).to eq options_hash
+        expect(subject.options).to eq options
       end
     end
   end

@@ -5,8 +5,8 @@ module Deco
   class Options
     include Optionable
 
-    def initialize(options_hash: nil)
-      self.options = options_hash if options_hash.present?
+    def initialize(options: nil)
+      self.options = options_with_defaults options: options
     end
   end
 end

@@ -37,10 +37,52 @@ RSpec.describe 'Deco::Model features', type: :features do
   end
 
   describe 'when defining validators' do
-    it 'does something awesome'
+    subject do
+      Class.new(Deco::Model) do
+        validates :field1, :field2, presence: true
+      end.new(options: options).load(hash: hash)
+    end
+
+    before do
+      subject.validate
+    end
+
+    let(:hash) { { field1: :value1, field2: nil } }
+
+    it 'validates' do
+      expected_errors = ["Field2 can't be blank"]
+      expect(subject.errors.full_messages).to match_array expected_errors
+    end
   end
 
-  describe 'when defining fields' do
-    it 'does something awesome'
+  describe 'when defining required fields' do
+    subject do
+      Class.new(Deco::Model) do
+        def required_fields
+          %i(field1 field2)
+        end
+      end.new(options: options).load(hash: hash)
+    end
+
+    before do
+      subject.validate
+    end
+
+    context 'when the required fields are present' do
+      let(:hash) { { field1: :value1, field2: :value2 } }
+
+      it 'returns no errors' do
+        expect(subject.valid?).to eq true
+      end
+    end
+
+    context 'when the required fields are missing' do
+      let(:hash) { { field1: :value1 } }
+
+      it 'returns errors' do
+        expected_errors = ['Field2 field is missing']
+        expect(subject.errors.full_messages).to match_array expected_errors
+      end
+    end
   end
 end

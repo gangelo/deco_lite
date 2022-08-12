@@ -25,7 +25,7 @@ module Deco
       # will merge options into OptionsDefaultable::DEFAULT_OPTIONS
       # so we have defaults for any options not passed in through
       # options.
-      self.options = options_with_defaults options: options
+      self.options = Options.with_defaults options
     end
 
     def load(hash:, options: {})
@@ -34,11 +34,16 @@ module Deco
       # this object was created, allowing us to retain any defaut
       # options while loading, but also provide option customization
       # of options when needed.
-      options = Options.new(options: options_with_defaults(options: options, defaults: self.options))
-
-      load_hash(hash: hash, options: options.options)
+      options = Options.with_defaults(options, defaults: self.options)
+      load_hash(hash: hash, options: options)
 
       self
+    end
+
+    private
+
+    def field_conflict?(field_name:)
+      respond_to?(field_name)
     end
   end
 end

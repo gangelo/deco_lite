@@ -48,7 +48,7 @@ RSpec.describe Deco::OptionsValidatable, type: :module do
         let(:options) { { bad_key1: :bad, bad_key2: :worse } }
 
         it 'raises an error' do
-          expected_error = "One or more options were unrecognized: #{options.keys}"
+          expected_error = "One or more option keys were unrecognized: #{options.keys}"
           expect { subject }.to raise_error expected_error
         end
       end

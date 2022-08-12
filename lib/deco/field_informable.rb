@@ -39,15 +39,15 @@ module Deco
       hash.each do |key, value|
         if value.is_a? Hash
           get_field_info hash: value,
-                          namespace: namespace,
-                          dig: dig << key,
-                          field_info: field_info
+                         namespace: namespace,
+                         dig: dig << key,
+                         field_info: field_info
           dig.pop
         else
           set_field_info!(field_info: field_info,
-                            key: key,
-                            namespace: namespace,
-                            dig: dig)
+                          key: key,
+                          namespace: namespace,
+                          dig: dig)
         end
       end
 

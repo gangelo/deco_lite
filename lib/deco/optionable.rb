@@ -1,65 +1,26 @@
 # frozen_string_literal: true
 
-require_relative 'fields_optionable'
-require_relative 'namespace_optionable'
-require_relative 'options_defaultable'
+require 'immutable_struct_ex'
+require_relative 'options'
 require_relative 'options_validatable'
 
 module Deco
   # Defines methods and fields to manage options.
   module Optionable
-    include Deco::FieldsOptionable
-    include Deco::NamespaceOptionable
-    include Deco::OptionsDefaultable
-
-    class << self
-      def included(base)
-        base.extend(Deco::OptionsValidatable)
-      end
-    end
+    include OptionsValidatable
 
     def options
-      @options&.dup || options_with_defaults(options: {})
-    end
-
-    def validate_options!
-      self.class.validate_options! options: options
-    end
-
-    def field
-      key = OPTION_FIELDS
-      options[key] || OPTION_FIELDS_DEFAULT
-    end
-
-    def namespace
-      key = OPTION_NAMESPACE
-      options[key] || OPTION_NAMESPACE_DEFAULT
-    end
-
-    def merge?
-      field == OPTION_FIELDS_MERGE
-    end
-
-    def strict?
-      field == OPTION_FIELDS_STRICT
-    end
-
-    def namespace?
-      key = OPTION_NAMESPACE
-      options[key].present?
+      @options || Options.default
     end
 
     private
 
     def options=(value)
-      self.class.validate_options! options: value
+      options_hash = value.to_h
 
-      @options = value.dup
-    end
+      validate_options! options: options_hash
 
-    def options_with_defaults(options:, defaults: DEFAULT_OPTIONS)
-      options ||= {}
-      defaults.merge(options)
+      @options = Options.new(**options_hash)
     end
   end
 end

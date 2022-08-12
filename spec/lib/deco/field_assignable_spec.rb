@@ -16,10 +16,11 @@ RSpec.describe Deco::FieldAssignable, type: :module do
   let(:dig) { loadable_hash_field_info.first[1][:dig] }
   let(:field_value) { loadable_hash.dig(*dig, field_name) }
   let(:namespaced_field_name) { loadable_hash_field_info.first[0] }
+  let(:options) { Deco::Options.default }
 
   describe '#set_field_values' do
     before do
-      subject.set_field_values(hash: loadable_hash, field_info: loadable_hash_field_info)
+      subject.set_field_values(hash: loadable_hash, field_info: loadable_hash_field_info, options: options)
     end
 
     it_behaves_like 'the field was created'
@@ -31,7 +32,7 @@ RSpec.describe Deco::FieldAssignable, type: :module do
 
   describe '#set_field_value' do
     before do
-      subject.set_field_value(field_name: namespaced_field_name, value: field_value)
+      subject.set_field_value(field_name: namespaced_field_name, value: field_value, options: options)
     end
 
     it_behaves_like 'the field was created'

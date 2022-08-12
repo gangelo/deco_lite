@@ -27,7 +27,7 @@ module Deco
 
     def validate_option_keys!(options:)
       invalid_options = options.except(*OPTIONS)&.keys
-      raise ArgumentError, "One or more options were unrecognized: #{invalid_options}" unless invalid_options.blank?
+      raise ArgumentError, "One or more option keys were unrecognized: #{invalid_options}" unless invalid_options.blank?
     end
 
     def validate_option_fields!(fields:)

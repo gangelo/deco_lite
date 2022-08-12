@@ -7,17 +7,18 @@ RSpec.describe Deco::FieldCreatable, type: :module do
 
   let(:field_name) { :field_name }
   let(:field_names) { %i(field_name_a field_name_b) }
+  let(:options) { Deco::Options.default }
 
   describe '#create_field_accessors' do
     context 'when passing a blank? array' do
       it 'does not raise an error' do
-        expect { klass.create_field_accessors field_names: field_names }.to_not raise_error
+        expect { klass.create_field_accessors field_names: field_names, options: options }.to_not raise_error
       end
     end
 
     context 'when passing an array of field names' do
       before do
-        klass.create_field_accessors field_names: field_names
+        klass.create_field_accessors field_names: field_names, options: options
       end
 
       it 'creates the attr_accessor' do

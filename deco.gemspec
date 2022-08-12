@@ -35,6 +35,7 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'activemodel', '~> 7.0', '>= 7.0.3.1'
   spec.add_runtime_dependency 'activesupport', '~> 7.0', '>= 7.0.3.1'
+  spec.add_runtime_dependency 'immutable_struct_ex', '~> 0.1.0'
   # spec.add_development_dependency 'benchmark-ips', '~> 2.3'
   spec.add_development_dependency 'bundler', '~> 2.2', '>= 2.2.17'
   # spec.add_development_dependency 'factory_bot', '~> 6.2'

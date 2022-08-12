@@ -5,12 +5,14 @@ RSpec.describe Deco::FieldRequireable, type: :module do
       include Deco::FieldCreatable
       include Deco::FieldRequireable
 
-      def initialize(field_names:)
-        create_field_accessors field_names: field_names
+      def initialize(field_names:, options:)
+        create_field_accessors field_names: field_names, options: options
       end
     end
-    Klass.new(field_names: field_names)
+    Klass.new(field_names: field_names, options: options)
   end
+
+  let(:options) { Deco::Options.default }
 
   describe '#required_fields' do
     let(:field_names) { [] }

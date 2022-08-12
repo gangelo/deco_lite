@@ -11,19 +11,14 @@ module Deco
 
     private
 
-    def load_hash(hash:, options: {})
-      validate_arguments!(hash: hash, options: options)
+    def load_hash(hash:, options:)
+      raise ArgumentError, "Argument hash is not a Hash (#{hash.class})" unless hash.is_a? Hash
 
       return if hash.blank?
 
-      field_info = get_field_info(hash: hash, namespace: options[:namespace])
-      set_field_values(hash: hash, field_info: field_info)
+      field_info = get_field_info(hash: hash, namespace: options.namespace)
+      set_field_values(hash: hash, field_info: field_info, options: options)
       merge_field_info! field_info: field_info
-    end
-
-    def validate_arguments!(hash:, options:)
-      raise ArgumentError, 'hash is not a Hash' unless hash.is_a? Hash
-      raise ArgumentError, 'options is not a Hash' unless options.is_a? Hash
     end
   end
 end

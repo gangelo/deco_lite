@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    deco (0.1.0)
+    deco_lite (0.1.0)
       activemodel (~> 7.0, >= 7.0.3.1)
       activesupport (~> 7.0, >= 7.0.3.1)
       immutable_struct_ex (~> 0.2.0)
@@ -91,7 +91,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 2.2, >= 2.2.17)
-  deco!
+  deco_lite!
   pry-byebug (~> 3.9)
   rake (~> 10.0)
   reek (~> 6.0, >= 6.0.4)

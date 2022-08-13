@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe 'Deco::Model features', type: :features do
+RSpec.describe 'DecoLite::Model features', type: :features do
   context 'when defining attributes' do
     context 'when loaded fields do not conflict with existing attributes' do
       subject do
-        Class.new(Deco::Model) do
+        Class.new(DecoLite::Model) do
           attr_reader :non_existing_field
 
           private
@@ -21,13 +21,13 @@ RSpec.describe 'Deco::Model features', type: :features do
 
     context 'when loading fields conflict with existing attributes' do
       subject do
-        Class.new(Deco::Model) do
+        Class.new(DecoLite::Model) do
           attr_accessor :existing_field
         end.new(options: options).load(hash: hash)
       end
 
       let(:hash) { { existing_field: :existing_field } }
-      let(:options) { { fields: Deco::FieldsOptionable::OPTION_FIELDS_STRICT } }
+      let(:options) { { fields: DecoLite::FieldsOptionable::OPTION_FIELDS_STRICT } }
       let(:expected_error) do
         /Field 'existing_field' conflicts with existing attribute/
       end
@@ -38,7 +38,7 @@ RSpec.describe 'Deco::Model features', type: :features do
 
   describe 'when defining validators' do
     subject do
-      Class.new(Deco::Model) do
+      Class.new(DecoLite::Model) do
         validates :field1, :field2, presence: true
       end.new(options: options).load(hash: hash)
     end
@@ -57,7 +57,7 @@ RSpec.describe 'Deco::Model features', type: :features do
 
   describe 'when defining required fields' do
     subject do
-      Class.new(Deco::Model) do
+      Class.new(DecoLite::Model) do
         def required_fields
           %i(field1 field2)
         end

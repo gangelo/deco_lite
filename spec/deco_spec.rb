@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-RSpec.describe Deco do
+RSpec.describe DecoLite do
   it 'has a version number' do
-    expect(Deco::VERSION).not_to be nil
+    expect(DecoLite::VERSION).not_to be nil
   end
 end

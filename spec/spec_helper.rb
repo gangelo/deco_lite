@@ -9,7 +9,7 @@ SimpleCov.start do
   add_filter 'spec'
 end
 
-require 'deco'
+require 'deco_lite'
 Dir[File.join(Dir.pwd, "spec/support/**/*.rb")].each {|f| require f}
 
 RSpec.configure do |config|

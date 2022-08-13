@@ -1,25 +1,25 @@
-# Deco
+# DecoLite
 
 [![GitHub version](http://badge.fury.io/gh/gangelo%2Fdeco.svg)](https://badge.fury.io/gh/gangelo%2Fdeco)
 
-[![Gem Version](https://badge.fury.io/rb/deco.svg)](https://badge.fury.io/rb/deco)
+[![Gem Version](https://badge.fury.io/rb/deco_lite.svg)](https://badge.fury.io/rb/deco_lite)
 
-[![](http://ruby-gem-downloads-badge.herokuapp.com/deco?type=total)](http://www.rubydoc.info/gems/deco/)
-[![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://www.rubydoc.info/gems/deco/)
+[![](http://ruby-gem-downloads-badge.herokuapp.com/deco_lite?type=total)](http://www.rubydoc.info/gems/deco_lite/)
+[![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://www.rubydoc.info/gems/deco_lite/)
 
-[![Report Issues](https://img.shields.io/badge/report-issues-red.svg)](https://github.com/gangelo/deco/issues)
+[![Report Issues](https://img.shields.io/badge/report-issues-red.svg)](https://github.com/gangelo/deco_lite/issues)
 
 [![License](http://img.shields.io/badge/license-MIT-yellowgreen.svg)](#license)
 
 ## Introduction
 
-Deco is in development. I wouldn't expect breaking changes before v1.0.0; however, I can't completely rule this out. Currently, Deco only supports Hashes whose keys are `Symbols`, contain no embedded spaces, and conform to Ruby `attr_accessor` naming conventions. However, I'll certainly work out a solution for all this in future releases.
+DecoLite is in development. I wouldn't expect breaking changes before v1.0.0; however, I can't completely rule this out. Currently, DecoLite only supports Hashes whose keys are `Symbols`, contain no embedded spaces, and conform to Ruby `attr_accessor` naming conventions. However, I'll certainly work out a solution for all this in future releases.
 
-TBD: Documentation regarding `Deco::Model` options, `Deco::Model#load` options: how these work, and how they play together (in the meantime, see the specs). 
+TBD: Documentation regarding `DecoLite::Model` options, `DecoLite::Model#load` options: how these work, and how they play together (in the meantime, see the specs).
 
-_Deco_ is a little gem that allows you to use the provided `Deco::Model` class (`include ActiveModel::Model`) to create Decorator classes which can be instantiated and used. Inherit from `Deco::Model` to create your own unique classes with custom functionality. A `Deco::Model` includes `ActiveModel::Model`, so validation can be applied using [ActiveModel validation helpers](https://api.rubyonrails.org/v6.1.3/classes/ActiveModel/Validations/HelperMethods.html) you are familiar with; or, you can roll your own - just like any other ActiveModel. 
+_Deco_ is a little gem that allows you to use the provided `DecoLite::Model` class (`include ActiveModel::Model`) to create Decorator classes which can be instantiated and used. Inherit from `DecoLite::Model` to create your own unique classes with custom functionality. A `DecoLite::Model` includes `ActiveModel::Model`, so validation can be applied using [ActiveModel validation helpers](https://api.rubyonrails.org/v6.1.3/classes/ActiveModel/Validations/HelperMethods.html) you are familiar with; or, you can roll your own - just like any other ActiveModel.
 
-A `Deco::Model` will allow you to consume a Ruby Hash that you supply via the `Deco::Model#load` method. Your supplied Ruby Hashes are used to create `attr_accessor` attributes (_"fields"_) on the model. Each attribute created, is then assigned its value from the Hash loaded.
+A `DecoLite::Model` will allow you to consume a Ruby Hash that you supply via the `DecoLite::Model#load` method. Your supplied Ruby Hashes are used to create `attr_accessor` attributes (_"fields"_) on the model. Each attribute created, is then assigned its value from the Hash loaded.
 
 `attr_accessor` names created are _mangled_ to include namespacing. This creates unique attribute names for nested Hashes that may include non-unique keys. For example:
 
@@ -38,7 +38,7 @@ A `Deco::Model` will allow you to consume a Ruby Hash that you supply via the `D
   }
 }
 ```
-Given the above example, Deco will produce the following `attr_accessors` on the `Deco::Model` object when loaded (`Deco::Model#load`), and assign the values: 
+Given the above example, DecoLite will produce the following `attr_accessors` on the `DecoLite::Model` object when loaded (`DecoLite::Model#load`), and assign the values:
 
 ```ruby
 name=, name #=> 'John Doe'
@@ -47,7 +47,7 @@ wife_name=, wife_name #=> 'Mary Doe'
 wife_age=, wife_age #=> 30
 ```
 
-`Deco::Model#load` can be called _multiple times_, on the same model, with different Hashes. This could potentially cause `attr_accessor` name clashes. In order to ensure unique `attr_accessor` names, a _"namespace"_ may be _explicitly_ provided to ensure uniqueness. For example, continuing from the previous example; if we were to call `Deco::Model#load` a _second time_ with the following Hash, it would produce `attr_accessor` name clashes: 
+`DecoLite::Model#load` can be called _multiple times_, on the same model, with different Hashes. This could potentially cause `attr_accessor` name clashes. In order to ensure unique `attr_accessor` names, a _"namespace"_ may be _explicitly_ provided to ensure uniqueness. For example, continuing from the previous example; if we were to call `DecoLite::Model#load` a _second time_ with the following Hash, it would produce `attr_accessor` name clashes:
 
 ```ruby
 {
@@ -56,7 +56,7 @@ wife_age=, wife_age #=> 30
 }
 ```
 
-However, passing a `namespace: :grandpa` option to the `Deco::Model#load` method, would produce the following `attr_accessors`, ensuring uniquess:
+However, passing a `namespace: :grandpa` option to the `DecoLite::Model#load` method, would produce the following `attr_accessors`, ensuring uniquess:
 ```ruby
 # Unique now that the namespace "grandpa" has been applied.
 grandpa_name=, grandpa_name #=> 'Henry Doe'
@@ -65,19 +65,19 @@ grandpa_age=, grandpa_age #=> 85
 ## Use Cases
 
 ### General
-_Deco_ would _most likely_ thrive where the structure of the Hashe(s) consumed by the `Deco::Model#load` method is known. This is because of the way _Deco_ mangles loaded Hash key names to create unique `attr_accessor` names (see the Introduction section) although, I'm sure there are some metaprogramming geniuses out there that might prove me wrong. Assuming this is the case, _Deco_ would be ideal to handle Model attributes, Webservice JSON results (converted to Ruby Hash), JSON Web Token (JWT) payload, etc..
+_Deco_ would _most likely_ thrive where the structure of the Hashe(s) consumed by the `DecoLite::Model#load` method is known. This is because of the way _Deco_ mangles loaded Hash key names to create unique `attr_accessor` names (see the Introduction section) although, I'm sure there are some metaprogramming geniuses out there that might prove me wrong. Assuming this is the case, _Deco_ would be ideal to handle Model attributes, Webservice JSON results (converted to Ruby Hash), JSON Web Token (JWT) payload, etc..
 
 ### Rails
-Because `Deco::Model` includes `ActiveModel::Model`, it could also be ideal for use as a model in Rails applications, where a _decorator pattern_ can be used, and methods provided for use in Rails views; for example:
+Because `DecoLite::Model` includes `ActiveModel::Model`, it could also be ideal for use as a model in Rails applications, where a _decorator pattern_ can be used, and methods provided for use in Rails views; for example:
 
 ```ruby
-class ViewModel < Deco::Model
+class ViewModel < DecoLite::Model
   validates :first, :last, presence: true
-  
+
   def salutation
     "<span class='happy'>Hello <em>#{full_name}<em>, welcome back!</span>"
   end
-  
+
   def full_name
     "#{first} #{last}"
   end
@@ -105,7 +105,7 @@ Get creative. Please pop me an email and let me know how _you're_ using _Deco_.
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'deco'
+gem 'deco_lite'
 ```
 
 And then execute:
@@ -114,15 +114,15 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install deco
+    $ gem install deco_lite
 
 ## Examples and Usage
 
 ```ruby
-require 'deco'
+require 'deco_lite'
 
-husband = { 
-  name: 'John Doe', 
+husband = {
+  name: 'John Doe',
   info: {
     age: 21,
     address: '1 street, boonton, nj 07005',
@@ -130,8 +130,8 @@ husband = {
   },
 }
 
-wife = { 
-  name: 'Mary Doe', 
+wife = {
+  name: 'Mary Doe',
   info: {
     age: 20,
     address: '1 street, boonton, nj 07005',
@@ -139,11 +139,11 @@ wife = {
   },
 }
 
-class Couple < Deco::Model)
+class Couple < DecoLite::Model)
   def live_together?
     husband_info_address == wife_info_address
   end
-           
+
   def breadwinner
     case
     when husband_info_salary > wife_info_salary
@@ -182,7 +182,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/deco. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/deco_lite. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -190,4 +190,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the Deco project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/deco/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the DecoLite project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/deco_lite/blob/master/CODE_OF_CONDUCT.md).

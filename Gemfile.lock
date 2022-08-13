@@ -4,7 +4,7 @@ PATH
     deco (0.1.0)
       activemodel (~> 7.0, >= 7.0.3.1)
       activesupport (~> 7.0, >= 7.0.3.1)
-      immutable_struct_ex (~> 0.1.0)
+      immutable_struct_ex (~> 0.2.0)
 
 GEM
   remote: https://rubygems.org/
@@ -24,7 +24,7 @@ GEM
     docile (1.4.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
-    immutable_struct_ex (0.1.1)
+    immutable_struct_ex (0.2.1)
     kwalify (0.7.2)
     method_source (1.0.0)
     minitest (5.16.2)

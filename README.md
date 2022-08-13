@@ -1,6 +1,7 @@
 # Deco
 
-[![GitHub version](http://badge.fury.io/gh/gangelo%deco.svg)](https://badge.fury.io/gh/gangelo%deco)
+[![GitHub version](http://badge.fury.io/gh/gangelo%2Fdeco.svg)](https://badge.fury.io/gh/gangelo%2Fdeco)
+
 [![Gem Version](https://badge.fury.io/rb/deco.svg)](https://badge.fury.io/rb/deco)
 
 [![](http://ruby-gem-downloads-badge.herokuapp.com/deco?type=total)](http://www.rubydoc.info/gems/deco/)

@@ -1,5 +1,15 @@
 # Deco
 
+[![GitHub version](http://badge.fury.io/gh/gangelo%deco.svg)](https://badge.fury.io/gh/gangelo%deco)
+[![Gem Version](https://badge.fury.io/rb/deco.svg)](https://badge.fury.io/rb/deco)
+
+[![](http://ruby-gem-downloads-badge.herokuapp.com/deco?type=total)](http://www.rubydoc.info/gems/deco/)
+[![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://www.rubydoc.info/gems/deco/)
+
+[![Report Issues](https://img.shields.io/badge/report-issues-red.svg)](https://github.com/gangelo/deco/issues)
+
+[![License](http://img.shields.io/badge/license-MIT-yellowgreen.svg)](#license)
+
 ## Introduction
 
 Deco is in development. I wouldn't expect breaking changes before v1.0.0; however, I can't completely rule this out. Currently, Deco only supports Hashes whose keys are `Symbols`, contain no embedded spaces, and conform to Ruby `attr_accessor` naming conventions. However, I'll certainly work out a solution for all this in future releases.

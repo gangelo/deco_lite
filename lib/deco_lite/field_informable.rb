@@ -56,6 +56,7 @@ module DecoLite
 
     def set_field_info!(field_info:, key:, namespace:, dig:)
       field_key = [namespace, *dig, key].compact.join('_').to_sym
+
       field_info[field_key] = {
         field_name: key,
         dig: dig.dup

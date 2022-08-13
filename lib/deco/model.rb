@@ -39,11 +39,5 @@ module Deco
 
       self
     end
-
-    private
-
-    def field_conflict?(field_name:)
-      respond_to?(field_name)
-    end
   end
 end

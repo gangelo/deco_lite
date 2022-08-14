@@ -36,22 +36,13 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'activemodel', '~> 7.0', '>= 7.0.3.1'
   spec.add_runtime_dependency 'activesupport', '~> 7.0', '>= 7.0.3.1'
   spec.add_runtime_dependency 'immutable_struct_ex', '~> 0.2.0'
-  # spec.add_development_dependency 'benchmark-ips', '~> 2.3'
   spec.add_development_dependency 'bundler', '~> 2.2', '>= 2.2.17'
-  # spec.add_development_dependency 'factory_bot', '~> 6.2'
   spec.add_development_dependency 'pry-byebug', '~> 3.9'
-  # #spec.add_development_dependency 'rake', '~> 0'
-  # #spec.add_development_dependency 'redcarpet', '~> 3.5', '>= 3.5.1'
-  spec.add_development_dependency 'reek', '~> 6.0', '>= 6.0.4'
-  spec.add_development_dependency 'rspec', '~> 3.10'
-  # This verson of rubocop is returning errors.
-  # spec.add_development_dependency 'rubocop', '~> 1.14'
-  spec.add_development_dependency 'rubocop', '~> 1.9.1'
-  spec.add_development_dependency 'rubocop-performance', '~> 1.11', '>= 1.11.3'
-  spec.add_development_dependency 'rubocop-rspec', '~> 2.3'
+  spec.add_development_dependency 'reek', '~> 6.1', '>= 6.1.1'
+  spec.add_development_dependency 'rspec', '>= 3.10'
+  spec.add_development_dependency 'rubocop', '~> 1.35'
+  spec.add_development_dependency 'rubocop-performance', '~> 1.14', '>= 1.14.3'
+  spec.add_development_dependency 'rubocop-rspec', '~> 2.12', '>= 2.12.1'
   spec.add_development_dependency 'simplecov', '~> 0.21.2'
-
-  # spec.add_development_dependency "bundler", "~> 1.16"
-  spec.add_development_dependency 'rake', '~> 10.0'
-  # spec.add_development_dependency "rspec", "~> 3.0"
+  spec.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
 end

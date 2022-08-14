@@ -31,10 +31,6 @@ A `DecoLite::Model` will allow you to consume a Ruby Hash that you supply via th
   wife: {
     name: 'Mary Doe',
     age: 30,
-  },
-  dog: {
-    name: 'Brutus',
-    age: 7,
   }
 }
 ```

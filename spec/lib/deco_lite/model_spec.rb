@@ -1,6 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe DecoLite::Model, type: :model do
+  subject do
+    described_class.new(options: options)
+      .load(hash: hash, options: load_options)
+  end
+
   describe '#initialize' do
     context 'with no options' do
       it 'does not raise an error' do
@@ -18,11 +23,6 @@ RSpec.describe DecoLite::Model, type: :model do
   end
 
   describe '#load' do
-    subject do
-      described_class.new(options: options)
-        .load(hash: hash, options: load_options)
-    end
-
     context 'when the arguments are valid' do
       it 'does not raise an error' do
         expect { subject }.to_not raise_error
@@ -116,11 +116,6 @@ RSpec.describe DecoLite::Model, type: :model do
   end
 
   describe '#field_names' do
-    subject do
-      described_class.new(options: options)
-        .load(hash: hash, options: load_options)
-    end
-
     context 'when there are no fields' do
       let(:hash) { {} }
 
@@ -132,6 +127,32 @@ RSpec.describe DecoLite::Model, type: :model do
     context 'when there are fields' do
       it 'returns an array of field names' do
         expect(subject.field_names).to eq field_names
+      end
+    end
+  end
+
+  describe '#to_h' do
+    context 'when there are no fields' do
+      let(:hash) { {} }
+
+      it 'returns an empty Hash' do
+        expect(subject.to_h).to eq({})
+      end
+    end
+
+    context 'when there are fields' do
+      let(:expected_hash) do
+        {
+          a: :a,
+          b: :b,
+          c0_d: :c0_d,
+          c0_e_f_g: :c0_e_f_g,
+          c1_d: :c1_d,
+          c1_e_f_g: :c1_e_f_g
+        }
+      end
+      it 'returns an empty Hash' do
+        expect(subject.to_h).to eq expected_hash
       end
     end
   end

@@ -2,6 +2,7 @@
 
 require 'active_model'
 require_relative 'field_requireable'
+require_relative 'hashable'
 require_relative 'hash_loadable'
 require_relative 'model_nameable'
 require_relative 'optionable'
@@ -12,6 +13,7 @@ module DecoLite
   class Model
     include ActiveModel::Model
     include FieldRequireable
+    include Hashable
     include HashLoadable
     include ModelNameable
     include Optionable

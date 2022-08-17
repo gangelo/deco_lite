@@ -1,3 +1,6 @@
+### 0.2.2
+* Fix bug requiring support codez in lib/deco_lite.rb.
+
 ### 0.2.1
 * changes
   * Add mad_flatter gem runtime dependency.

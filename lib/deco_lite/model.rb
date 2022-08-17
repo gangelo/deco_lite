@@ -18,14 +18,12 @@ module DecoLite
     include FieldCreatable
     include FieldRequireable
     include Hashable
-    #include HashLoadable
     include ModelNameable
     include Optionable
 
     validate :validate_required_fields
 
     def initialize(options: {})
-      @field_info = {}
       @field_names = []
       # Accept whatever options are sent, but make sure
       # we have defaults set up. #options_with_defaults
@@ -43,7 +41,7 @@ module DecoLite
       # of options when needed.
       options = Options.with_defaults(options, defaults: self.options)
 
-      load_hash(hash: hash, options: options)
+      load_hash(hash: hash, deco_lite_options: options)
 
       self
     end
@@ -54,24 +52,24 @@ module DecoLite
 
     attr_writer :field_names
 
-    def load_hash(hash:, options:)
-      service_options = merge_with_service_options service_options: options
-      service.execute(hash: hash, options: service_options).tap do |h|
+    def load_hash(hash:, deco_lite_options:)
+      load_service_options = merge_with_load_service_options deco_lite_options: deco_lite_options
+      load_service.execute(hash: hash, options: load_service_options).tap do |h|
         h.each_pair do |field_name, value|
-          create_field_accessor field_name: field_name, options: options
+          create_field_accessor field_name: field_name, options: deco_lite_options
           field_names << field_name
-          set_field_value(field_name: field_name, value: value, options: options)
+          set_field_value(field_name: field_name, value: value, options: deco_lite_options)
         end
       end
     end
 
-    def service
-      @service ||= MadFlatter::Service.new
+    def load_service
+      @load_service ||= MadFlatter::Service.new
     end
 
-    def merge_with_service_options(service_options:)
-      service.options.to_h.merge \
-        service_options.to_h.slice(*MadFlatter::OptionsDefaultable::DEFAULT_OPTIONS.keys)
+    def merge_with_load_service_options(deco_lite_options:)
+      load_service.options.to_h.merge \
+        deco_lite_options.to_h.slice(*MadFlatter::OptionsDefaultable::DEFAULT_OPTIONS.keys)
     end
   end
 end

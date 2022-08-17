@@ -6,7 +6,6 @@ require_relative 'field_assignable'
 require_relative 'field_creatable'
 require_relative 'field_requireable'
 require_relative 'hashable'
-#require_relative 'hash_loadable'
 require_relative 'model_nameable'
 require_relative 'optionable'
 
@@ -43,18 +42,8 @@ module DecoLite
       # options while loading, but also provide option customization
       # of options when needed.
       options = Options.with_defaults(options, defaults: self.options)
-      #load_hash(hash: hash, options: options)
 
-      mad_flatter = MadFlatter::Service.new
-      mad_flatter_default_options = mad_flatter.options
-      mad_flatter_options = mad_flatter_default_options.to_h.merge \
-        options.to_h.slice(*MadFlatter::OptionsDefaultable::DEFAULT_OPTIONS.keys)
-      new_hash = mad_flatter.execute(hash: hash, options: mad_flatter_options)
-      new_hash.each_pair do |key, value|
-        create_field_accessor field_name: key, options: options
-        field_names << key
-        set_field_value(field_name: key, value: value, options: options)
-      end
+      load_hash(hash: hash, options: options)
 
       self
     end
@@ -64,5 +53,25 @@ module DecoLite
     private
 
     attr_writer :field_names
+
+    def load_hash(hash:, options:)
+      service_options = merge_with_service_options service_options: options
+      service.execute(hash: hash, options: service_options).tap do |h|
+        h.each_pair do |field_name, value|
+          create_field_accessor field_name: field_name, options: options
+          field_names << field_name
+          set_field_value(field_name: field_name, value: value, options: options)
+        end
+      end
+    end
+
+    def service
+      @service ||= MadFlatter::Service.new
+    end
+
+    def merge_with_service_options(service_options:)
+      service.options.to_h.merge \
+        service_options.to_h.slice(*MadFlatter::OptionsDefaultable::DEFAULT_OPTIONS.keys)
+    end
   end
 end

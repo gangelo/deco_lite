@@ -3,7 +3,6 @@
 require_relative 'deco_lite/field_assignable'
 require_relative 'deco_lite/field_conflictable'
 require_relative 'deco_lite/field_creatable'
-require_relative 'deco_lite/field_informable'
 require_relative 'deco_lite/field_requireable'
 require_relative 'deco_lite/field_retrievable'
 require_relative 'deco_lite/fields_optionable'

@@ -1,10 +1,9 @@
 # frozen_string_literal: true
 
 require 'active_model'
-require 'mad_flatter'
-require_relative 'field_assignable'
 require_relative 'field_creatable'
 require_relative 'field_requireable'
+require_relative 'hash_loadable'
 require_relative 'hashable'
 require_relative 'model_nameable'
 require_relative 'optionable'
@@ -14,9 +13,9 @@ module DecoLite
   # dynamic models that can be used as decorators.
   class Model
     include ActiveModel::Model
-    include FieldAssignable
     include FieldCreatable
     include FieldRequireable
+    include HashLoadable
     include Hashable
     include ModelNameable
     include Optionable
@@ -51,25 +50,5 @@ module DecoLite
     private
 
     attr_writer :field_names
-
-    def load_hash(hash:, deco_lite_options:)
-      load_service_options = merge_with_load_service_options deco_lite_options: deco_lite_options
-      load_service.execute(hash: hash, options: load_service_options).tap do |h|
-        h.each_pair do |field_name, value|
-          create_field_accessor field_name: field_name, options: deco_lite_options
-          field_names << field_name
-          set_field_value(field_name: field_name, value: value, options: deco_lite_options)
-        end
-      end
-    end
-
-    def load_service
-      @load_service ||= MadFlatter::Service.new
-    end
-
-    def merge_with_load_service_options(deco_lite_options:)
-      load_service.options.to_h.merge \
-        deco_lite_options.to_h.slice(*MadFlatter::OptionsDefaultable::DEFAULT_OPTIONS.keys)
-    end
   end
 end

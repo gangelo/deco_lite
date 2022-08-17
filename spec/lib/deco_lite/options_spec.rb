@@ -47,5 +47,59 @@ RSpec.describe DecoLite::Options, type: :module do
         end
       end
     end
+
+    describe '#merge?' do
+      context 'when option fields: is :merge' do
+        let(:options) { { fields: :merge } }
+
+        it 'returns true' do
+          expect(subject.merge?).to eq true
+        end
+      end
+
+      context 'when option fields: is not :merge' do
+        let(:options) { { fields: :strict } }
+
+        it 'returns false' do
+          expect(subject.merge?).to eq false
+        end
+      end
+    end
+
+    describe '#strict?' do
+      context 'when option fields: is :strict' do
+        let(:options) { { fields: :strict } }
+
+        it 'returns true' do
+          expect(subject.strict?).to eq true
+        end
+      end
+
+      context 'when option fields: is not :strict' do
+        let(:options) { { fields: :merge } }
+
+        it 'returns false' do
+          expect(subject.strict?).to eq false
+        end
+      end
+    end
+
+    describe '#namespace?' do
+      context 'when option namespace: is a Symbol' do
+        let(:options) { { fields: :merge, namespace: :namespace } }
+
+        it 'returns true' do
+          expect(subject.namespace?).to eq true
+        end
+      end
+
+      context 'when option namespace: is nil?' do
+        let(:options) { { fields: :merge, namespace: nil } }
+
+        it 'returns false' do
+          expect(subject.namespace?).to eq false
+        end
+      end
+    end
   end
 end

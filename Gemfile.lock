@@ -5,6 +5,7 @@ PATH
       activemodel (~> 7.0, >= 7.0.3.1)
       activesupport (~> 7.0, >= 7.0.3.1)
       immutable_struct_ex (~> 0.2.0)
+      mad_flatter (~> 1.0.0.pre.beta)
 
 GEM
   remote: https://rubygems.org/
@@ -27,6 +28,9 @@ GEM
     immutable_struct_ex (0.2.1)
     json (2.6.2)
     kwalify (0.7.2)
+    mad_flatter (1.0.0.pre.beta)
+      activesupport (~> 7.0, >= 7.0.3.1)
+      immutable_struct_ex (~> 0.2.0)
     method_source (1.0.0)
     minitest (5.16.2)
     parallel (1.22.1)

@@ -22,7 +22,7 @@ module DecoLite
           end
 
           def namespace?
-            namespace || false
+            namespace.present? || false
           end
         end
         validate_options! options: immutable_struct_ex.to_h

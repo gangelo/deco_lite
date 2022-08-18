@@ -1,3 +1,6 @@
+### 0.2.3
+* Fix bug that added duplcate field names to Model#field_names.
+
 ### 0.2.2
 * Fix bug requiring support codez in lib/deco_lite.rb.
 

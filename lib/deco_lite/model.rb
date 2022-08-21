@@ -3,6 +3,7 @@
 require 'active_model'
 require_relative 'field_creatable'
 require_relative 'field_requireable'
+require_relative 'field_names_persistable'
 require_relative 'hash_loadable'
 require_relative 'hashable'
 require_relative 'model_nameable'
@@ -14,6 +15,7 @@ module DecoLite
   class Model
     include ActiveModel::Model
     include FieldCreatable
+    include FieldNamesPersistable
     include FieldRequireable
     include HashLoadable
     include Hashable
@@ -24,6 +26,7 @@ module DecoLite
 
     def initialize(options: {})
       @field_names = []
+
       # Accept whatever options are sent, but make sure
       # we have defaults set up. #options_with_defaults
       # will merge options into OptionsDefaultable::DEFAULT_OPTIONS
@@ -32,7 +35,7 @@ module DecoLite
       self.options = Options.with_defaults options
     end
 
-    def load(hash:, options: {})
+    def load!(hash:, options: {})
       # Merge options into the default options passed through the
       # constructor; these will override any options passed in when
       # this object was created, allowing us to retain any defaut
@@ -45,10 +48,11 @@ module DecoLite
       self
     end
 
-    attr_reader :field_names
+    def load(hash:, options: {})
+      puts 'WARNING: DecoLite::Model#load will be deprecated in a future release;' \
+        ' use DecoLite::Model#load! instead!'
 
-    private
-
-    attr_writer :field_names
+        load!(hash: hash, options: options)
+    end
   end
 end

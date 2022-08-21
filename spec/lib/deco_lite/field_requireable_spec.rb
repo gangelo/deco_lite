@@ -4,6 +4,7 @@ RSpec.describe DecoLite::FieldRequireable, type: :module do
       include ActiveModel::Model
       include DecoLite::FieldCreatable
       include DecoLite::FieldRequireable
+      include DecoLite::FieldNamesPersistable
 
       def initialize(field_names:, options:)
         create_field_accessors field_names: field_names, options: options

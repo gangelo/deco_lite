@@ -29,16 +29,22 @@ RSpec.describe 'DecoLite::Model features', type: :features do
       let(:hash) { { existing_field: :existing_field } }
       let(:options) { { fields: DecoLite::FieldsOptionable::OPTION_FIELDS_STRICT } }
       let(:expected_error) do
-        /Field 'existing_field' conflicts with existing attribute/
+        /Field :existing_field conflicts with existing method\(s\)/
       end
 
       it_behaves_like 'an error is raised'
     end
 
     context 'when loading fields conflict with existing attributes and option fields: :merge' do
-      subject do
+      subject! do
         Class.new(DecoLite::Model) do
           attr_accessor :existing_field
+
+          def initialize(options: {})
+            super
+
+            @field_names = %i(existing_field)
+          end
         end.new(options: options).load(hash: hash)
       end
 
@@ -49,6 +55,8 @@ RSpec.describe 'DecoLite::Model features', type: :features do
       let(:hash) { { existing_field: :existing_field } }
       let(:options) { { fields: DecoLite::FieldsOptionable::OPTION_FIELDS_MERGE } }
       let(:new_value) { :new_value }
+
+      it_behaves_like 'there are no errors'
 
       it 'replaces the field value' do
         expect(subject.existing_field).to eq new_value

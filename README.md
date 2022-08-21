@@ -170,6 +170,29 @@ model.wife_info_age         #=> 20
 model.wife_info_address     #=> 1 street, boonton, nj 07005
 ```
 
+### Manually Defining Attributes
+
+Manually defining attributes on your subclass is possible; however, you
+must add your attr_reader name to the `DecoLite::Model@field_names` array, or an error will be reaised _if_ there are any conflicting field names being loaded
+using `DecoLite::Model#load!`, regardless of setting the `{ fields: :merge }`
+option. This is because DecoLite assumes any existing attributes not added to
+the model via `load!`to be native to the object created, and therefore will not
+allow you to create attr_accessors for existing attributes, as this can potentially be dangerous.
+
+To avoid errors when manually defining attributes on the model that could potentially be in conflict with fields loaded using `DecoLite::Model#load!`, do the following:
+
+```ruby
+class JustBecauseYouCanDoesntMeanYouShould < DecoLite::Model
+  attr_accessor :existing_field
+
+  def initialize(options: {})
+    super
+
+    @field_names = %i(existing_field)
+  end
+end
+```
+
 ## Development
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.

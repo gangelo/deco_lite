@@ -20,7 +20,9 @@ end
 
 RSpec.shared_examples 'an error is raised' do
   it 'raises an error' do
-    expect { subject }.to raise_error expected_error
+    expect do
+      subject.load(hash: hash, options: load_options)
+    end.to raise_error expected_error
   end
 end
 

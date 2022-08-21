@@ -10,6 +10,7 @@ RSpec.describe DecoLite::FieldAssignable, type: :module do
   subject(:klass) do
     class AwesomeKlass
       include DecoLite::FieldAssignable
+      include DecoLite::FieldNamesPersistable
     end.new
   end
   let(:field_name) { loadable_hash_field_info.first[1][:field_name] }

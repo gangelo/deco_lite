@@ -16,19 +16,17 @@ module DecoLite
       field_name = field_name_or_field_name_with_namespace field_name: field_name, options: options
 
       raise "Field :#{field_name} conflicts with existing method(s) " \
-        ":#{field_name} and/or :#{field_name}=; " \
-        'this will raise an error when loading using strict mode ' \
-        "(i.e. options: { #{OPTION_FIELDS}: :#{OPTION_FIELDS_STRICT} }) " \
-        'or if the method(s) are native to the object (e.g :to_s, :==, etc.).'
+            ":#{field_name} and/or :#{field_name}=; " \
+            'this will raise an error when loading using strict mode ' \
+            "(i.e. options: { #{OPTION_FIELDS}: :#{OPTION_FIELDS_STRICT} }) " \
+            'or if the method(s) are native to the object (e.g :to_s, :==, etc.).'
     end
 
     # This method returns true
     def field_conflict?(field_name:, options:)
       # If field_name was already added using Model#load, there is only a
       # conflict if options.strict? is true.
-      if field_names_include?(field_name: field_name, options: options)
-        return options.strict?
-      end
+      return options.strict? if field_names_include?(field_name: field_name, options: options)
 
       # If we get here, we know that :field_name does not exist as an
       # attribute on the model. If the attribute already exists on the

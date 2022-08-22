@@ -30,6 +30,7 @@ module DecoLite
 
     private
 
+    # rubocop:disable Lint/UnusedMethodArgument
     def create_field_getter(field_name:, options:)
       define_singleton_method(field_name) do
         instance_variable_get "@#{field_name}"
@@ -41,5 +42,6 @@ module DecoLite
         instance_variable_set "@#{field_name}", value
       end
     end
+    # rubocop:enable Lint/UnusedMethodArgument
   end
 end

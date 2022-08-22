@@ -47,10 +47,10 @@ module DecoLite
     end
 
     def load(hash:, options: {})
-      puts 'WARNING: DecoLite::Model#load will be deprecated in a future release;' \
-        ' use DecoLite::Model#load! instead!'
+      puts 'WARNING: DecoLite::Model#load will be deprecated in a future release; ' \
+           'use DecoLite::Model#load! instead!'
 
-        load!(hash: hash, options: options)
+      load!(hash: hash, options: options)
     end
   end
 end

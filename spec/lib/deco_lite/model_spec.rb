@@ -66,22 +66,22 @@ RSpec.describe DecoLite::Model, type: :model do
       end
     end
 
-    describe 'when loadig objects with the same fields' do
-      let(:model) do
-        described_class.new(options: options)
-            .load!(hash: hash, options: load_options)
-      end
-
-      it 'does not raise errors due to conflicting field names' do
-        expect do
+    describe 'when loading objects with the conflicting field names' do
+      context 'when using the default options' do
+        let!(:model) do
           described_class.new(options: options)
-            .load!(hash: hash, options: load_options)
+              .load!(hash: hash, options: load_options)
         end
-      end
 
-      it do
-        # Sanity check to make sure the same fields were loaded.
-        expect(model.to_h).to match subject.to_h
+        it 'does not raise errors due to conflicting field names' do
+          expect { subject }.to_not raise_error
+        end
+
+        it do
+          # Sanity check to make sure the same fields were loaded.
+          expect(hash).to_not be_empty
+          expect(model.to_h).to match subject.to_h
+        end
       end
     end
   end

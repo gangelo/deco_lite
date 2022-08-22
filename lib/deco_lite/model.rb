@@ -25,8 +25,6 @@ module DecoLite
     validate :validate_required_fields
 
     def initialize(options: {})
-      @field_names = []
-
       # Accept whatever options are sent, but make sure
       # we have defaults set up. #options_with_defaults
       # will merge options into OptionsDefaultable::DEFAULT_OPTIONS

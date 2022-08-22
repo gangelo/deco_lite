@@ -30,6 +30,20 @@ RSpec.describe DecoLite::Model, type: :model do
       it_behaves_like 'the field values are what they should be'
     end
 
+    context 'when the arguments are invalid' do
+      context 'when the object type is not handled' do
+        subject do
+          described_class.new(options: options)
+            .load!(hash: hash, options: load_options)
+        end
+
+        let(:hash) { :not_handled }
+        let(:expected_error) { "Argument hash is not a Hash (#{hash.class})" }
+
+        it_behaves_like 'an error is raised'
+      end
+    end
+
     context 'when passing a namespace' do
       subject do
         described_class.new(options: options)
@@ -49,20 +63,6 @@ RSpec.describe DecoLite::Model, type: :model do
           namespaced_field_name = "#{namespace}_#{field_name}".to_sym
           subject.public_send(namespaced_field_name) == field_name
         end).to eq true
-      end
-    end
-
-    context 'when the arguments are invalid' do
-      context 'when the object type is not handled' do
-        subject do
-          described_class.new(options: options)
-            .load!(hash: hash, options: load_options)
-        end
-
-        let(:hash) { :not_handled }
-        let(:expected_error) { "Argument hash is not a Hash (#{hash.class})" }
-
-        it_behaves_like 'an error is raised'
       end
     end
 

@@ -25,7 +25,7 @@ A `DecoLite::Model` will allow you to consume a Ruby Hash that you supply via th
 
 ```ruby
 # NOTE: keys :name and :age are not unique across this Hash.
-{
+family = {
   name: 'John Doe',
   age: 35,
   wife: {
@@ -37,26 +37,55 @@ A `DecoLite::Model` will allow you to consume a Ruby Hash that you supply via th
 Given the above example, DecoLite will produce the following `attr_accessors` on the `DecoLite::Model` object when loaded (`DecoLite::Model#load`), and assign the values:
 
 ```ruby
-name=, name #=> 'John Doe'
-age=, age #=> 35
-wife_name=, wife_name #=> 'Mary Doe'
-wife_age=, wife_age #=> 30
+model = DecoLite::Model.new.load(hash: family)
+
+model.name #=> 'John Doe'
+model.respond_to? :name= #=> true
+
+model.age #=> 35
+model.respond_to? :age= #=> true
+
+model.wife_name #=> 'Mary Doe'
+model.respond_to? :wife_name= #=> true
+
+model.wife_age #=> 30
+model.respond_to? :wife_age= #=> true
 ```
 
 `DecoLite::Model#load` can be called _multiple times_, on the same model, with different Hashes. This could potentially cause `attr_accessor` name clashes. In order to ensure unique `attr_accessor` names, a _"namespace"_ may be _explicitly_ provided to ensure uniqueness. For example, continuing from the previous example; if we were to call `DecoLite::Model#load` a _second time_ with the following Hash, it would produce `attr_accessor` name clashes:
 
 ```ruby
-{
+grandpa = {
   name: 'Henry Doe',
   age: 85,
 }
+# The :name and :age Hash keys above will produce :name/:name= and :age/:age= attr_accessors and clash because these were already added to the model when "John Doe" was loaded with the first call to DecoLite::Model#load.
 ```
 
-However, passing a `namespace: :grandpa` option to the `DecoLite::Model#load` method, would produce the following `attr_accessors`, ensuring uniquess:
+However, passing a `namespace:` option (for example `namespace: :grandpa`) to the `DecoLite::Model#load` method, would produce the following `attr_accessors`, ensuring their uniqueness:
+
 ```ruby
-# Unique now that the namespace "grandpa" has been applied.
-grandpa_name=, grandpa_name #=> 'Henry Doe'
-grandpa_age=, grandpa_age #=> 85
+model.load(hash: grandpa, options: { namespace: :grandpa })
+
+# Unique now that the namespace: :grandpa has been applied:
+model.grandpa_name #=> 'Henry Doe'
+model.respond_to? :grandpa_name= #=> true
+
+model.grandpa_age #=> 85
+model.respond_to? :grandpa_age= #=> true
+
+# All the other attributes on the model remain the same, and unique:
+model.name #=> 'John Doe'
+model.respond_to? :name= #=> true
+
+model.age #=> 35
+model.respond_to? :age= #=> true
+
+model.wife_name #=> 'Mary Doe'
+model.respond_to? :wife_name= #=> true
+
+model.wife_age #=> 30
+model.respond_to? :wife_age= #=> true
 ```
 ## Use Cases
 
@@ -95,22 +124,6 @@ view_model.salutation
 ### Etc., etc., etc.
 
 Get creative. Please pop me an email and let me know how _you're_ using _Deco_.
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'deco_lite'
-```
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install deco_lite
 
 ## Examples and Usage
 
@@ -192,6 +205,21 @@ class JustBecauseYouCanDoesntMeanYouShould < DecoLite::Model
   end
 end
 ```
+## Installation
+
+Add this line to your application's Gemfile:
+
+```ruby
+gem 'deco_lite'
+```
+
+And then execute:
+
+    $ bundle
+
+Or install it yourself as:
+
+    $ gem install deco_lite
 
 ## Development
 

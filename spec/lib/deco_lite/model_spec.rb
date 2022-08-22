@@ -1,5 +1,47 @@
 # frozen_string_literal: true
 
+RSpec.shared_examples 'conflicting field names are handled correctly' do
+  subject do
+    described_class.new(options: options)
+      .load!(hash: hash, options: fields_merge_options)
+  end
+
+  let(:model) do
+    described_class.new(options: options)
+      .load!(hash: hash, options: load_options)
+  end
+
+  it 'does not raise an error due to conflicting field names' do
+    expect { model }.to_not raise_error
+  end
+
+  it do
+    # Sanity check to make sure the same fields were loaded.
+    expect(hash).to_not be_empty
+  end
+end
+
+RSpec.shared_examples 'conflicting field names raise an error' do
+  subject do
+    described_class.new(options: options)
+      .load!(hash: hash, options: fields_merge_options)
+  end
+
+  let(:model) do
+    described_class.new(options: options)
+      .load!(hash: hash, options: load_options)
+  end
+
+  it 'raises an error due to conflicting field names' do
+    expect { model }.to raise_error /conflicts with existing method\(s\)/
+  end
+
+  it do
+    # Sanity check to make sure the same fields were loaded.
+    expect(hash).to_not be_empty
+  end
+end
+
 RSpec.describe DecoLite::Model, type: :model do
   subject do
     described_class.new(options: options)
@@ -68,19 +110,34 @@ RSpec.describe DecoLite::Model, type: :model do
 
     describe 'when loading objects with the conflicting field names' do
       context 'when using the default options' do
-        let!(:model) do
-          described_class.new(options: options)
-              .load!(hash: hash, options: load_options)
+        it_behaves_like 'conflicting field names are handled correctly'
+      end
+
+      context 'when options allow field merging' do
+        context 'with no namespace' do
+          let(:load_options) { fields_merge_options }
+
+          it_behaves_like 'conflicting field names are handled correctly'
         end
 
-        it 'does not raise errors due to conflicting field names' do
-          expect { subject }.to_not raise_error
+        context 'with a namespace' do
+          let(:load_options) { fields_merge_options.merge({ namespace: :namespace }) }
+
+          it_behaves_like 'conflicting field names are handled correctly'
+        end
+      end
+
+      context 'when options are strict (do not allow field merging)' do
+        context 'with no namespace' do
+          let(:load_options) { fields_strict_options }
+
+          it_behaves_like 'conflicting field names raise an error'
         end
 
-        it do
-          # Sanity check to make sure the same fields were loaded.
-          expect(hash).to_not be_empty
-          expect(model.to_h).to match subject.to_h
+        context 'with a namespace' do
+          let(:load_options) { fields_strict_options.merge({ namespace: :namespace }) }
+
+          it_behaves_like 'conflicting field names are handled correctly'
         end
       end
     end

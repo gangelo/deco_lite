@@ -5,6 +5,18 @@ RSpec.shared_context 'model initialization params' do
   # Options to pass to DecoLite::Model#load by default
   let(:load_options) { {} }
   let(:default_options) { DecoLite::OptionsDefaultable::DEFAULT_OPTIONS }
+  let(:fields_strict_options) do
+    {
+      DecoLite::FieldsOptionable::OPTION_FIELDS =>
+        DecoLite::FieldsOptionable::OPTION_FIELDS_STRICT
+    }
+  end
+  let(:fields_merge_options) do
+    {
+      DecoLite::FieldsOptionable::OPTION_FIELDS =>
+        DecoLite::FieldsOptionable::OPTION_FIELDS_MERGE
+    }
+  end
   let(:non_default_options) do
     {
       DecoLite::FieldsOptionable::OPTION_FIELDS =>

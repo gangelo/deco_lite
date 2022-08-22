@@ -35,7 +35,7 @@ module DecoLite
 
       raise ArgumentError,
         "option :fields value or type is invalid. #{OPTION_FIELDS_VALUES} (Symbol) " \
-          "was expected, but '#{fields}' (#{fields.class}) was received."
+        "was expected, but '#{fields}' (#{fields.class}) was received."
     end
 
     def validate_option_namespace!(namespace:)
@@ -43,7 +43,7 @@ module DecoLite
       return if namespace.blank? || namespace.is_a?(Symbol)
 
       raise ArgumentError, 'option :namespace value or type is invalid. A Symbol was expected, ' \
-        "but '#{namespace}' (#{namespace.class}) was received."
+                           "but '#{namespace}' (#{namespace.class}) was received."
     end
   end
 end

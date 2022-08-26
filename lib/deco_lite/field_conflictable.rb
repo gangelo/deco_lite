@@ -19,7 +19,8 @@ module DecoLite
             ":#{field_name} and/or :#{field_name}=; " \
             'this will raise an error when loading using strict mode ' \
             "(i.e. options: { #{OPTION_FIELDS}: :#{OPTION_FIELDS_STRICT} }) " \
-            'or if the method(s) are native to the object (e.g :to_s, :==, etc.).'
+            'or if the method(s) are native to the object (e.g :to_s, :==, etc.). ' \
+            "Current options are: options: #{options.to_h}."
     end
 
     # This method returns true

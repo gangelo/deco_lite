@@ -49,19 +49,42 @@ RSpec.describe DecoLite::Model, type: :model do
   end
 
   describe '#initialize' do
-    context 'with no options' do
+    context 'with no arguments' do
       it 'does not raise an error' do
         expect { described_class.new }.to_not raise_error
       end
     end
 
-    context 'with valid options' do
+    context 'with a hash' do
       subject do
-        described_class.new(options: default_options)
-          .load!(hash: hash)
+        described_class.new(hash: hash, options: default_options)
       end
 
+      it_behaves_like 'there are no errors'
+      it_behaves_like 'the fields are defined'
+      it_behaves_like 'the field values are what they should be'
+    end
+
+    context 'with options' do
+      subject { described_class.new(options: default_options) }
+
      it_behaves_like 'there are no errors'
+    end
+  end
+  describe '#load' do
+    subject do
+      described_class.new(options: options)
+        .load(hash: hash, options: load_options)
+    end
+
+    it 'raises no errors' do
+      expect { subject }.to_not raise_error
+    end
+
+    it 'outputs a deprecation warning' do
+      warning = 'WARNING: DecoLite::Model#load will be deprecated ' \
+        'in a future release; use DecoLite::Model#load! instead!'
+      expect { subject }.to output(a_string_including(warning)).to_stdout
     end
   end
 
@@ -143,36 +166,122 @@ RSpec.describe DecoLite::Model, type: :model do
     end
   end
 
-  describe '#load' do
-    subject do
-      described_class.new(options: options)
-        .load(hash: hash, options: load_options)
+  describe '#validate' do
+    context 'when #required_fields returns required fields' do
+      subject(:model) do
+        Klass = Class.new(DecoLite::Model) do
+          def required_fields
+            %i(a b)
+          end
+        end
+        Klass.new(hash: hash, options: options)
+      end
+
+      context 'before any data is loaded' do
+        let(:hash) { {} }
+
+        context 'when option required_fields: nil' do
+          let(:options) { { required_fields: nil } }
+          let(:expected_errors) do
+            [
+              'A field is missing',
+              'B field is missing'
+            ]
+          end
+
+          it 'does not create the attr_attributes for the required fields' do
+            expect(subject).to_not respond_to :a
+            expect(subject).to_not respond_to :b
+          end
+
+          it 'validates the model without raising errors' do
+            expect(subject.validate).to eq false
+            expect(subject.errors.full_messages).to match_array expected_errors
+          end
+        end
+
+        context 'when option required_fields: :auto' do
+          let(:options) { { required_fields: :auto } }
+
+          it 'creates the attr_attributes for the required fields' do
+            expect(subject).to respond_to :a
+            expect(subject).to respond_to :b
+          end
+
+          it 'raises no errors' do
+            expect { subject.validate }.to_not raise_error
+          end
+        end
+
+      end
+
+      context 'after data is loaded' do
+        let(:hash) { { a: 'a', b: 'b' } }
+
+        context 'when option required_fields: nil' do
+          let(:options) { { required_fields: nil } }
+
+          it 'validates the model without raising errors' do
+            expect { subject.validate }.to_not raise_error
+          end
+        end
+
+        context 'when option required_fields: :auto' do
+          let(:options) { { required_fields: :auto } }
+
+          it 'validates the model without raising errors' do
+            expect { subject.validate }.to_not raise_error
+          end
+        end
+      end
     end
 
-    it 'raises no errors' do
-      expect { subject }.to_not raise_error
-    end
+    context 'when ActiveModel validators are defined' do
+      subject(:model) do
+        Klass = Class.new(DecoLite::Model) do
+          validates :a, :b, presence: true
+        end
+        Klass.new(hash: hash)
+      end
 
-    it 'outputs a deprecation warning' do
-      warning = 'WARNING: DecoLite::Model#load will be deprecated ' \
-        'in a future release; use DecoLite::Model#load! instead!'
-      expect { subject }.to output(a_string_including(warning)).to_stdout
+      context 'before any data is loaded' do
+        let(:hash) { {} }
+        let(:expected_errors) do
+          [
+            "A can't be blank",
+            "B can't be blank"
+          ]
+        end
+
+        it 'validates the model without raising errors' do
+          expect(subject.valid?).to eq false
+          expect(subject.errors.full_messages).to match_array expected_errors
+        end
+      end
+
+      context 'after data is loaded' do
+        it 'validates the model without raising errors' do
+          expect(subject.valid?).to eq true
+        end
+      end
     end
   end
 
   describe '#validate_required_fields' do
     subject do
-      Class.new(DecoLite::Model) do
+      Klass = Class.new(DecoLite::Model) do
         def initialize(hash:, options:, required_fields:)
-          super(options: options)
           @required_fields = required_fields
-        end
+
+          super(hash: hash, options: options)
+         end
 
         def required_fields
           @required_fields
         end
-      end.new(hash: hash, options: options, required_fields: required_fields)
-        .load!(hash: hash)
+      end
+      klass = Klass.new(hash: hash, options: options, required_fields: required_fields)
+      klass.load!(hash: hash)
     end
 
     before do
@@ -193,6 +302,10 @@ RSpec.describe DecoLite::Model, type: :model do
       end
 
       context 'when the required fields do not exist' do
+        let(:options) do
+          default_options.merge({ DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS => nil })
+        end
+
         let(:required_fields) do
           field_names.map { |field_name| "not_found_#{field_name}".to_sym }
         end

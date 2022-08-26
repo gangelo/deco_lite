@@ -1,9 +1,10 @@
 # frozen_string_literal: true
 
 require 'active_model'
-require_relative 'field_creatable'
-require_relative 'field_requireable'
+require_relative 'field_assignable'
 require_relative 'field_names_persistable'
+require_relative 'field_requireable'
+require_relative 'fields_auto_attr_accessable'
 require_relative 'hash_loadable'
 require_relative 'hashable'
 require_relative 'model_nameable'
@@ -14,9 +15,10 @@ module DecoLite
   # dynamic models that can be used as decorators.
   class Model
     include ActiveModel::Model
-    include FieldCreatable
+    include FieldAssignable
     include FieldNamesPersistable
     include FieldRequireable
+    include FieldsAutoloadable
     include HashLoadable
     include Hashable
     include ModelNameable
@@ -24,13 +26,18 @@ module DecoLite
 
     validate :validate_required_fields
 
-    def initialize(options: {})
+    def initialize(hash: {}, options: {})
       # Accept whatever options are sent, but make sure
       # we have defaults set up. #options_with_defaults
       # will merge options into OptionsDefaultable::DEFAULT_OPTIONS
       # so we have defaults for any options not passed in through
       # options.
       self.options = Options.with_defaults options
+
+      hash ||= {}
+
+      auto_fields = auto_attr_accessors.merge(hash)
+      load!(hash: auto_fields, options: options) if hash.present? || auto_attr_accessors?
     end
 
     def load!(hash:, options: {})

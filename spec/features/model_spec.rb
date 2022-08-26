@@ -10,7 +10,7 @@ RSpec.describe 'DecoLite::Model features', type: :features do
           private
 
           attr_writer :non_existing_field
-        end.new(options: options).load(hash: hash)
+        end.new(options: options).load!(hash: hash)
       end
 
       it 'retains the field reader/writer methods' do
@@ -23,7 +23,7 @@ RSpec.describe 'DecoLite::Model features', type: :features do
       subject do
         Class.new(DecoLite::Model) do
           attr_accessor :existing_field
-        end.new(options: options).load(hash: hash)
+        end.new(options: options).load!(hash: hash)
       end
 
       let(:hash) { { existing_field: :existing_field } }
@@ -45,11 +45,11 @@ RSpec.describe 'DecoLite::Model features', type: :features do
 
             @field_names = %i(existing_field)
           end
-        end.new(options: options).load(hash: hash)
+        end.new(options: options).load!(hash: hash)
       end
 
       before do
-        subject.load(hash: { existing_field: new_value} )
+        subject.load!(hash: { existing_field: new_value} )
       end
 
       let(:hash) { { existing_field: :existing_field } }
@@ -72,7 +72,7 @@ RSpec.describe 'DecoLite::Model features', type: :features do
     subject do
       Class.new(DecoLite::Model) do
         validates :field1, :field2, presence: true
-      end.new(options: options).load(hash: hash)
+      end.new(options: options).load!(hash: hash)
     end
 
     before do
@@ -93,7 +93,7 @@ RSpec.describe 'DecoLite::Model features', type: :features do
         def required_fields
           %i(field1 field2)
         end
-      end.new(options: options).load(hash: hash)
+      end.new(options: options).load!(hash: hash)
     end
 
     before do
@@ -110,6 +110,7 @@ RSpec.describe 'DecoLite::Model features', type: :features do
 
     context 'when the required fields are missing' do
       let(:hash) { { field1: :value1 } }
+      let(:options) { { fields: :merge, required_fields: nil } }
 
       it 'returns errors' do
         expected_errors = ['Field2 field is missing']

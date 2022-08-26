@@ -1,3 +1,10 @@
+### 0.3.0
+* Changes
+  * `DecoLite::Model#new` how accepts a :hash named parameter that will load the Hash as if calling `DecoLite::Model.new.load!(hash: <hash>)`.
+  * `DecoLite::Model#new now creates attr_accessors (fields) for any attribute that has an ActiveModel validator associated with it. This prevents errors raised when #validate is called before data is #load!ed.
+  * `DecoLite::Model#new` now creates attr_accessors (fields) for any field returned from `DecoLite::Model#reqired_fields` IF the required_fields: :auto option is set.
+  * bin/console now starts a pry-byebug session.
+
 ### 0.2.5
 * Changes
   * Remove init of `@field_names = []` in `Model#initialize` as unnecessary - FieldNamesPersistable takes care of this.

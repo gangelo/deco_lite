@@ -1,3 +1,47 @@
+RSpec.shared_examples 'no errors are raised' do
+  it 'does not raise an error' do
+    expect { subject }.to_not raise_error
+  end
+end
+
+RSpec.shared_examples 'option :fields raises an error' do
+  before do
+    options[DecoLite::FieldsOptionable::OPTION_FIELDS] = option_value
+  end
+
+  it 'raises an error' do
+    expected_error = 'option :fields value or type is invalid. ' \
+      "#{DecoLite::FieldsOptionable::OPTION_FIELDS_VALUES} (Symbol) " \
+      "was expected, but '#{option_value}' (#{option_value.class}) was received."
+    expect { subject }.to raise_error expected_error
+  end
+end
+
+RSpec.shared_examples 'option :namespace raises an error' do
+  before do
+    options[DecoLite::NamespaceOptionable::OPTION_NAMESPACE] = option_value
+  end
+
+  it 'raises an error' do
+    expected_error = 'option :namespace value or type is invalid. A Symbol was expected, ' \
+      "but '#{option_value}' (#{option_value.class}) was received."
+    expect { subject }.to raise_error expected_error
+  end
+end
+
+RSpec.shared_examples 'option required_fields raises an error' do
+  before do
+    options[DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS] = option_value
+  end
+
+  it 'raises an error' do
+    expected_error = 'option :fields_required value or type is invalid. ' \
+      "#{DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS_VALUES} (Symbol) " \
+      "was expected, but '#{option_value}' (#{option_value.class}) was received."
+    expect { subject }.to raise_error expected_error
+  end
+end
+
 RSpec.describe DecoLite::OptionsValidatable, type: :module do
   subject(:klass) do
     Class.new do
@@ -5,37 +49,77 @@ RSpec.describe DecoLite::OptionsValidatable, type: :module do
     end.new.validate_options!(options: options)
   end
 
-  let(:options) do
-    {
-      DecoLite::FieldsOptionable::OPTION_FIELDS =>
-        DecoLite::FieldsOptionable::OPTION_FIELDS_DEFAULT,
-      DecoLite::NamespaceOptionable::OPTION_NAMESPACE =>
-        DecoLite::NamespaceOptionable::OPTION_NAMESPACE_DEFAULT,
-    }
-  end
+  let(:options) { default_options.dup }
 
   describe 'constants' do
     describe 'OPTIONS' do
-      it_behaves_like 'a constant', :OPTIONS, [ :fields, :namespace ]
+      it_behaves_like 'a constant', :OPTIONS, [:fields, :namespace, :required_fields]
     end
   end
 
   describe '#validate_options!' do
     context 'when the options are valid' do
-      it 'does not raise an error' do
-        expect { subject }.to_not raise_error
+      subject(:klass) do
+        Class.new do
+          include DecoLite::OptionsValidatable
+        end.new
       end
 
-      context 'when the :namespace option value is blank?' do
-        it 'does not raise an error'
+      context ':fields' do
+        let(:option_values) { DecoLite::FieldsOptionable::OPTION_FIELDS_VALUES }
+
+        it 'does not raise an error' do
+          expect do
+            option_values.each do |option_value|
+              options[DecoLite::FieldsOptionable::OPTION_FIELDS] = option_value
+              subject.validate_options!(options: options)
+            end
+          end.to_not raise_error
+        end
       end
 
-      context 'when the :namespace option value is a Symbol' do
-        it 'does not raise an error'
+      context ':namespace' do
+        context 'when blank?' do
+          let(:options) do
+            new_options = default_options.dup
+            new_options[DecoLite::NamespaceOptionable::OPTION_NAMESPACE] = nil
+            new_options
+          end
+
+          it_behaves_like 'no errors are raised'
+        end
+
+        context 'when any Symbol' do
+          context 'when any Symbol' do
+            let(:option_values) { %i(any symbol is works) }
+
+            it 'does not raise an error' do
+              expect do
+                option_values.each do |namespace|
+                  options[DecoLite::NamespaceOptionable::OPTION_NAMESPACE] = namespace
+                  subject.validate_options!(options: options)
+                end
+              end.to_not raise_error
+            end
+          end
+        end
+      end
+
+      context ':required_fields' do
+        let(:option_values) { DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS_VALUES }
+
+        it 'does not raise an error' do
+          expect do
+            option_values.each do |option_value|
+              options[DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS] = option_value
+              subject.validate_options!(options: options)
+            end
+          end.to_not raise_error
+        end
       end
     end
 
-    context 'when the options are not valid' do
+    context 'when the options are invalid' do
       context 'when the options argument is not a hash' do
         let(:options) { :not_a_hash }
 
@@ -54,30 +138,30 @@ RSpec.describe DecoLite::OptionsValidatable, type: :module do
       end
 
       context 'when the :fields option values are invalid' do
-        let(:options) { { DecoLite::FieldsOptionable::OPTION_FIELDS => option_value } }
         let(:option_value) { :bad }
 
-        it 'raises an error' do
-          expected_error = 'option :fields value or type is invalid. ' \
-            "#{DecoLite::FieldsOptionable::OPTION_FIELDS_VALUES} (Symbol) " \
-            "was expected, but '#{option_value}' (#{option_value.class}) was received."
-          expect { subject }.to raise_error expected_error
-        end
+        it_behaves_like 'option :fields raises an error'
       end
 
       context 'when the :namespace option value is invalid' do
         context 'when not a Symbol' do
-          before do
-            options[DecoLite::NamespaceOptionable::OPTION_NAMESPACE] = option_value
-          end
-
           let(:option_value) { 'bad' }
 
-          it 'raises an error' do
-            expected_error = 'option :namespace value or type is invalid. A Symbol was expected, ' \
-              "but '#{option_value}' (#{option_value.class}) was received."
-            expect { subject }.to raise_error expected_error
-          end
+          it_behaves_like 'option :namespace raises an error'
+        end
+      end
+
+      context 'when the :required_fields option value is invalid' do
+        context 'when not a Symbol' do
+          let(:option_value) { 'bad' }
+
+          it_behaves_like 'option required_fields raises an error'
+        end
+
+        context 'when the wrong Symbol' do
+          let(:option_value) { :bad }
+
+          it_behaves_like 'option required_fields raises an error'
         end
       end
     end

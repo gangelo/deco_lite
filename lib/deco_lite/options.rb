@@ -24,6 +24,10 @@ module DecoLite
           def namespace?
             namespace.present? || false
           end
+
+          def required_fields_auto?
+            required_fields == OPTION_REQUIRED_FIELDS_AUTO
+          end
         end
         validate_options! options: immutable_struct_ex.to_h
         immutable_struct_ex

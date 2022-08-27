@@ -188,22 +188,115 @@ model.wife_info_address     #=> 1 street, boonton, nj 07005
 
 #### Add validators to my model
 
-Simply add your `ActiveModel` validators just like you would any other `ActiveModel::Model` validator. However, be aware that (currently), any attribute (field) being validated that does not exist on the model, will raise a `NoMethodError` error:
+Simply add your `ActiveModel` validators just like you would any other `ActiveModel::Model` validator. However, be aware that (currently), any attribute (field) having an _explicit validation_ associated with it, will automatically cause an `attr_accessor` to be created for that field; this is to avoid `NoMethodErrors` when calling a validation method on the model (e.g. `#valid?`, `#validate`, etc.):
 
 ```ruby
 class Model < DecoLite::Model
   validates :first, :last, :address, presence: true
+  validates :age, numericality: true
 end
 
-model = Model.new(hash: { first: 'John', last: 'Doe' })
+# No :address
+model = Model.new(hash: { first: 'John', last: 'Doe', age: 25 })
+model.respond_to? :address
+#=> true
 
-# No :address; a NoMethodError error for :address will be raised.
-model.validate
-#=> undefined method 'address' for #<Model:0x00007f95931568c0 ... @field_names=[:first, :last], @first="John", @last="Doe", ...> (NoMethodError)
+model.valid?
+#=> false
+model.errors.full_messages
+#=> ["Address can't be blank"]
 
 model.load!(hash: { address: '123 park road, anytown, nj 01234' })
 model.validate
 #=> true
+```
+
+#### Validate whether or not certain fields were loaded
+
+To be clear, this has nothing to do with the _data_ associated with the fields loaded; rather, this has to do with whether or not the _fields themselves_ were created as attributes on your model as a result of loading data into your model. If you simply want to validate the _data_ loaded into your model, simply add `ActiveModel` validation, just like you would any other `ActiveModel` model, see the [Add validators to my model](#add-validators-to-my-model) section.
+
+If you want to validate whether or not particular _fields_ were added to your model as attributes (i.e. `attr_accessor`), as a result of `#load!`ing data into your model, you need to do a few things:
+  - Create a `DecoLite::Model` subclass.
+  - Override the `DecoLite::Model#required_fields` method to return the field names you want to validate.
+  - Use the `required_fields: nil` option when instantiating your model object.
+  - DO NOT add `ActiveModel` validators that _explicitly_ reference any field returned from `DecoLite::Model#required_fields`; this will cause `attr_accessors` to be created for these fields; consequently, `DecoLite::FieldRequireable#validate_required_fields` will _never_ return any errors because these fields will exist as attributes on your model. In other words, do not add `validates :first, :last, :address, presence: true` to your model if you need to validate whether or not the data you load into your model included fields :first, :last and :address.
+
+For example:
+
+```ruby
+class Model < DecoLite::Model
+  # :age field is optional and it's value is optional.
+  validates :age, numericality: { only_integer: true }, allow_blank: true
+
+  def required_fields
+    # We want to ensure attr_accessors are created for these fields.
+    %i(first last address)
+  end
+end
+
+# Option "required_fields: :auto" is the default which will automatically create
+# attr_accessors for fields returned from DecoLite::Model#required_fields, so we
+# need to set this option to nil (i.e. required_fields: nil).
+model = Model.new(options: { required_fields: nil })
+
+model.validate
+#=> false
+model.errors.full_messages
+#=> ["First field is missing", "Last field is missing", "Address field is missing"]
+
+user = { first: 'John', last: 'Doe', address: '123 anystreet, anytown, nj 01234'}
+model.load!(hash: user)
+model.validate
+#=> false
+model.errors.full_messages
+#=> ["Age is not a number"]
+```
+#### Validate whether or not certain fields were loaded _and_ validate the data associated with these same fields
+
+If you simply want to validate the _data_ loaded into your model, simply add `ActiveModel` validation, just like you would any other `ActiveModel` model, see the [Add validators to my model](#add-validators-to-my-model) section.
+
+If you want to validate whether or not particular fields were loaded _and_ field data associated with these same fields, you'll have to use custom validation (e.g. override `DecoLite::FieldRequireable#validate_required_fields` and manually add your own validation and errors). This is because `DecoLite::Model#new` will automatically create `attr_accessors` for any attribute (field) that has an _explicit_ `ActiveModel` validation associated with it, and return false positives when you validate your model. In addition to this, you will need to do several other things outlined in the [Validate whether or not certain fields were loaded](#validate-whether-or-not-certain-fields-were-loaded) section.
+
+For example:
+
+```ruby
+class Model < DecoLite::Model
+  def required_fields
+    %i(first last address age)
+  end
+
+  def validate_required_fields
+    super
+
+    first = self.try(:first)
+    errors.add(:first, "can't be blank") if first.nil?
+
+    last = self.try(:last)
+    errors.add(:last, "can't be blank") if last.nil?
+
+    address = self.try(:address)
+    errors.add(:address, "can't be blank") if address.nil?
+
+    age = self.try(:age)
+    errors.add(:age, "can't be blank") if age.nil?
+    errors.add(:age, 'is not a number') unless /\d+/ =~ age
+  end
+end
+model = Model.new(options: { required_fields: nil })
+
+model.validate
+#=> false
+
+model.errors.full_messages
+#=> ["First field is missing",
+ "Last field is missing",
+ "Address field is missing",
+ "Age field is missing",
+ "First can't be blank",
+ "Last can't be blank",
+ "Address can't be blank",
+ "Age can't be blank",
+ "Age is not a number"]
 ```
 
 #### Manually define attributes (fields) on my model

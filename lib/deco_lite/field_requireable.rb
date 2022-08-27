@@ -4,6 +4,8 @@ module DecoLite
   # Provides methods to manage fields that must be defined from
   # the dynamically loaded data.
   module FieldRequireable
+    MISSING_REQUIRED_FIELD_ERROR_TYPE = :missing_required_field
+
     # Returns field names that will be used to validate the presence of
     # dynamically created fields from loaded objects.
     #
@@ -23,7 +25,7 @@ module DecoLite
       required_fields.each do |field_name|
         next if required_field_exist? field_name: field_name
 
-        errors.add(field_name, 'field is missing', type: :missing_required_field)
+        errors.add(field_name, 'field is missing', type: MISSING_REQUIRED_FIELD_ERROR_TYPE)
       end
     end
 

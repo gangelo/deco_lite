@@ -1,3 +1,8 @@
+### 0.3.1
+* Changes
+  * Added `DecoLite::FieldRequireable::MISSING_REQUIRED_FIELD_ERROR_TYPE` for required field type errors.
+  * Update README.md with more examples.
+
 ### 0.3.0
 * Changes
   * `DecoLite::Model#new` how accepts a :hash named parameter that will load the Hash as if calling `DecoLite::Model.new.load!(hash: <hash>)`.

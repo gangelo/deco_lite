@@ -13,7 +13,7 @@ AllCops:
     - '*.gemspec'
     - 'spec/**/*'
     - 'vendor/**/*'
-    - 'scratch.rb'
+    - 'scratch*.rb'
 
 # Align the elements of a hash literal if they span more than one line.
 Layout/HashAlignment:

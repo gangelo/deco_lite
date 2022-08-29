@@ -1,3 +1,11 @@
+### 0.3.2
+* Changes
+  * Refactor FieldAssignable to remove call to FieldCreatable#create_field_accessor as this breaks single responsibility rule; which, in this case, makes sense to remove. FieldCreatable#create_field_accessor can be called wherever creation of a attr_accessor is needed.
+  * Refactor specs in keeping with above changes.
+  * README.md changes.
+* Bugs
+  * Fix bug where loading fields with the options: { fields: :strict } option raises an error for field that already exists.
+
 ### 0.3.1
 * Changes
   * Added `DecoLite::FieldRequireable::MISSING_REQUIRED_FIELD_ERROR_TYPE` for required field type errors.

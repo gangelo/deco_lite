@@ -23,17 +23,11 @@ end
 
 RSpec.shared_examples 'conflicting field names raise an error' do
   subject do
-    described_class.new(options: options)
-      .load!(hash: hash, options: fields_merge_options)
-  end
-
-  let(:model) do
-    described_class.new(options: options)
-      .load!(hash: hash, options: load_options)
+    described_class.new(hash: hash, options: options)
   end
 
   it 'raises an error due to conflicting field names' do
-    expect { model }.to raise_error /conflicts with existing method\(s\)/
+    expect { subject.load!(hash: hash, options: load_options) }.to raise_error /conflicts with existing method\(s\)/
   end
 
   it do

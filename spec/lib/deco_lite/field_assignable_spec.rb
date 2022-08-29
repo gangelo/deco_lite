@@ -1,45 +1,103 @@
-RSpec.shared_examples 'the field was created' do
-  it 'responds to the field name' do
-    expect(subject).to respond_to namespaced_field_name
-  end
-end
-
 RSpec.describe DecoLite::FieldAssignable, type: :module do
   include_context 'loadable objects'
 
-  subject(:klass) do
-    class AwesomeKlass
-      include DecoLite::FieldAssignable
-      include DecoLite::FieldNamesPersistable
-    end.new
+  describe '#set_field_value' do
+    subject(:klass) do
+      Class.new do
+        include DecoLite::FieldAssignable
+        include DecoLite::FieldCreatable
+        include DecoLite::FieldNamesPersistable
+
+        def initialize(field_name, options)
+          create_field_accessor(field_name: field_name, options: options)
+        end
+      end.new(field_name, options)
+    end
+
+    let(:field_name) { :field_name }
+    let(:field_value) { :field_value }
+    let(:options) { DecoLite::Options.default }
+
+    before do
+      subject.set_field_value(field_name: field_name, value: field_value, options: options)
+    end
+
+    it 'assigns the field value' do
+      expect(subject.public_send(field_name)).to eq field_value
+    end
   end
-  let(:field_name) { loadable_hash_field_info.first[1][:field_name] }
-  let(:dig) { loadable_hash_field_info.first[1][:dig] }
-  let(:field_value) { loadable_hash.dig(*dig, field_name) }
-  let(:namespaced_field_name) { loadable_hash_field_info.first[0] }
-  let(:options) { DecoLite::Options.default }
 
   describe '#set_field_values' do
-    before do
-      subject.set_field_values(hash: loadable_hash, field_info: loadable_hash_field_info, options: options)
+    context 'when the field is not namespaced' do
+      subject(:klass) do
+        Class.new do
+          include DecoLite::FieldAssignable
+          include DecoLite::FieldCreatable
+          include DecoLite::FieldNamesPersistable
+
+          def initialize(loadable_hash, options)
+            loadable_hash.keys.each do |field_name|
+              create_field_accessor(field_name: field_name, options: options)
+            end
+          end
+        end.new(loadable_hash, options)
+      end
+
+      let(:loadable_hash) do
+        {
+          field0: 'field0 data',
+          field1: 'field1 data',
+          field2: 'field2 data'
+        }
+      end
+      let(:loadable_hash_field_info) do
+        {
+          field0: { field_name: :field0, dig: [] },
+          field1: { field_name: :field1, dig: [] },
+          field2: { field_name: :field2, dig: [] }
+        }
+      end
+      let(:field_name) { :field_name }
+      let(:field_value) { :field_value }
+      let(:options) { DecoLite::Options.default }
+
+      before do
+        subject.set_field_values(hash: loadable_hash, field_info: loadable_hash_field_info, options: options)
+      end
+
+      it 'assigns the field values' do
+        loadable_hash.each do |field_name, field_value|
+          expect(subject.public_send(field_name)).to eq field_value
+        end
+      end
     end
 
-    it_behaves_like 'the field was created'
+    context 'when the field is namespaced' do
+      subject(:klass) do
+        Class.new do
+          include DecoLite::FieldAssignable
+          include DecoLite::FieldCreatable
+          include DecoLite::FieldNamesPersistable
 
-    it 'creates attributes for the fields and assigns the values' do
-      expect(subject.public_send(namespaced_field_name)).to eq field_value
-    end
-  end
+          def initialize(field_name, options)
+            create_field_accessor(field_name: field_name, options: options)
+          end
+        end.new(namespaced_field_name, options)
+      end
 
-  describe '#set_field_value' do
-    before do
-      subject.set_field_value(field_name: namespaced_field_name, value: field_value, options: options)
-    end
+      let(:field_name) { loadable_hash_field_info.first[1][:field_name] }
+      let(:dig) { loadable_hash_field_info.first[1][:dig] }
+      let(:field_value) { loadable_hash.dig(*dig, field_name) }
+      let(:namespaced_field_name) { loadable_hash_field_info.first[0] }
+      let(:options) { DecoLite::Options.default }
 
-    it_behaves_like 'the field was created'
+      before do
+        subject.set_field_values(hash: loadable_hash, field_info: loadable_hash_field_info, options: options)
+      end
 
-    it 'creates attribute for the field and assigns the value' do
-      expect(subject.public_send(namespaced_field_name)).to eq field_value
+      it 'assigns the field value' do
+        expect(subject.public_send(namespaced_field_name)).to eq field_value
+      end
     end
   end
 end

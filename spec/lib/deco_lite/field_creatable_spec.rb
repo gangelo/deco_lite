@@ -1,7 +1,9 @@
 RSpec.describe DecoLite::FieldCreatable, type: :module do
   subject(:klass) do
     class AwesomeKlass
+      include DecoLite::FieldAssignable
       include DecoLite::FieldCreatable
+      include DecoLite::FieldNamesPersistable
     end.new
   end
 

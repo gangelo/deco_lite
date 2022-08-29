@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require_relative 'field_name_namespaceable'
+require_relative 'field_requireable'
 require_relative 'fields_optionable'
 
 module DecoLite
@@ -9,6 +10,7 @@ module DecoLite
   module FieldConflictable
     include FieldNameNamespaceable
     include FieldsOptionable
+    include FieldRequireable
 
     def validate_field_conflicts!(field_name:, options:)
       return unless field_conflict?(field_name: field_name, options: options)

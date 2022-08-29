@@ -47,7 +47,6 @@ module DecoLite
       # options while loading, but also provide option customization
       # of options when needed.
       options = Options.with_defaults(options, defaults: self.options)
-
       load_hash(hash: hash, deco_lite_options: options)
 
       self

@@ -2,11 +2,13 @@
 
 require 'mad_flatter'
 require_relative 'field_assignable'
+require_relative 'field_creatable'
 
 module DecoLite
   # Provides methods to load and return information about a given hash.
   module HashLoadable
     include FieldAssignable
+    include FieldCreatable
 
     private
 

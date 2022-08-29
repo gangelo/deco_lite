@@ -13,13 +13,13 @@
 
 ## Introduction
 
-DecoLite is in development. I wouldn't expect breaking changes before v1.0.0; however, I can't completely rule this out. Currently, DecoLite only supports Hashes whose keys are `Symbols`, contain no embedded spaces, and conform to Ruby `attr_accessor` naming conventions. However, I'll certainly work out a solution for all this in future releases.
+DecoLite is in development. I wouldn't expect breaking changes before v1.0.0; however, I can't completely rule this out. Currently, DecoLite only supports Hashes whose keys are `Symbols`, contain no embedded spaces, and conform to Ruby `attr_accessor` naming conventions. However, I might try work out a reasonable solution for all this in future releases if the need is there.
 
-TBD: Documentation regarding `DecoLite::Model` options, `DecoLite::Model#load!` options: how these work, and how they play together (in the meantime, see the specs).
+TBD: Documentation regarding `DecoLite::Model` options, `DecoLite::Model#load!` options: how these work, and how they play together (e.g. options `fields: :merge` and `fields: :strict` for example; in the meantime, see the specs).
 
 _Deco_ is a little gem that allows you to use the provided `DecoLite::Model` class (`include ActiveModel::Model`) to create Decorator classes which can be instantiated and used. Inherit from `DecoLite::Model` to create your own unique classes with custom functionality. A `DecoLite::Model` includes `ActiveModel::Model`, so validation can be applied using [ActiveModel validation helpers](https://api.rubyonrails.org/v6.1.3/classes/ActiveModel/Validations/HelperMethods.html) you are familiar with; or, you can roll your own - just like any other ActiveModel.
 
-A `DecoLite::Model` will allow you to consume a Ruby Hash that you supply via the `DecoLite::Model#load!` method. Your supplied Ruby Hashes are used to create `attr_accessor` attributes (_"fields"_) on the model. Each attribute created, is then assigned its value from the Hash loaded.
+A `DecoLite::Model` will allow you to consume a Ruby Hash that you supply via the initializer (`DecoLite::Model#new`) or via the `DecoLite::Model#load!` method. Your supplied Ruby Hashes are used to create `attr_accessor` attributes (_"fields"_) on the model. Each attribute created, is then assigned its value from the Hash loaded.
 
 `attr_accessor` names created are _mangled_ to include namespacing. This creates unique attribute names for nested Hashes that may include non-unique keys. For example:
 
@@ -34,10 +34,11 @@ family = {
   }
 }
 ```
-Given the above example, DecoLite will produce the following `attr_accessors` on the `DecoLite::Model` object when loaded (`DecoLite::Model#load!`), and assign the values:
+Given the above example, DecoLite will produce the following `attr_accessors` on the `DecoLite::Model` object when loaded, and assign the values:
 
 ```ruby
-model = DecoLite::Model.new.load!(hash: family)
+# Or DecoLite::Model.new.load!(hash: family)
+model = DecoLite::Model.new(hash: family)
 
 model.name #=> 'John Doe'
 model.respond_to? :name= #=> true
@@ -59,7 +60,7 @@ grandpa = {
   name: 'Henry Doe',
   age: 85,
 }
-# The :name and :age Hash keys above will produce :name/:name= and :age/:age= attr_accessors and clash because these were already added to the model when "John Doe" was loaded with the first call to DecoLite::Model#load!.
+# The :name and :age Hash keys above will produce :name/:name= and :age/:age= attr_accessors and clash because these were already added to the model when "John Doe" was loaded with the first call to DecoLite::Model.new(hash: family).
 ```
 
 However, passing a `namespace:` option (for example `namespace: :grandpa`) to the `DecoLite::Model#load!` method, would produce the following `attr_accessors`, ensuring their uniqueness:
@@ -108,9 +109,7 @@ class ViewModel < DecoLite::Model
   end
 end
 
-view_model = ViewModel.new
-
-view_model.load!(hash: { first: 'John', last: 'Doe' })
+view_model = ViewModel.new(hash: { first: 'John', last: 'Doe' })
 
 view_model.valid?
 #=> true

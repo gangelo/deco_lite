@@ -16,5 +16,5 @@
 /.vscode/
 *.code-workspace
 
-scratch.rb
+scratch*.rb
 readme.txt

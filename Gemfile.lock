@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    deco_lite (0.3.1)
+    deco_lite (0.3.3)
       activemodel (~> 7.0, >= 7.0.3.1)
       activesupport (~> 7.0, >= 7.0.3.1)
       immutable_struct_ex (~> 0.2.0)
@@ -25,7 +25,7 @@ GEM
     docile (1.4.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
-    immutable_struct_ex (0.2.2)
+    immutable_struct_ex (0.2.3)
     json (2.6.2)
     kwalify (0.7.2)
     mad_flatter (1.0.1.pre.beta)
@@ -63,7 +63,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.11.0)
     rspec-support (3.11.0)
-    rubocop (1.35.0)
+    rubocop (1.35.1)
       json (~> 2.3)
       parallel (~> 1.10)
       parser (>= 3.1.2.1)

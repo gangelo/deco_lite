@@ -316,9 +316,10 @@ class JustBecauseYouCanDoesntMeanYouShould < DecoLite::Model
 end
 ```
 
-However, the above is unnecessary as this can be easily accomplished using `DecoLite::Model#load!`:
+However, the above is unnecessary as this can be easily accomplished by passing a `Hash` to the initializer or by using `DecoLite::Model#load!`:
+
 ```ruby
-model = Class.new(DecoLite::Model).new.load!(hash:{ existing_field: :existing_field_value })
+model = Class.new(DecoLite::Model).new(hash:{ existing_field: :existing_field_value })
 
 model.field_names
 #=> [:existing_field]
@@ -329,6 +330,7 @@ model.existing_field
 model.respond_to? :existing_field=
 #=> true
 ```
+
 ## Installation
 
 Add this line to your application's Gemfile:

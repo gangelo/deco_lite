@@ -1,5 +1,8 @@
 # frozen_string_literal: true
 
+require 'i18n'
+
+require_relative 'deco_lite/configure'
 require_relative 'deco_lite/field_assignable'
 require_relative 'deco_lite/field_conflictable'
 require_relative 'deco_lite/field_creatable'
@@ -17,3 +20,5 @@ require_relative 'deco_lite/options'
 require_relative 'deco_lite/options_defaultable'
 require_relative 'deco_lite/options_validatable'
 require_relative 'deco_lite/version'
+
+DecoLite.configure do |config| end

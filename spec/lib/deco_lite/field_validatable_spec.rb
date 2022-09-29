@@ -10,7 +10,7 @@ RSpec.shared_examples 'the field_name is invalid' do |field_name, options|
   it 'raises an error' do
     expect do
       subject.validate_field_name!(field_name: field_name, options: options)
-    end.to raise_error "field_name '#{field_name}' is not a valid field name."
+    end.to raise_error "field_name '#{field_name}' is not a valid field name"
   end
 end
 

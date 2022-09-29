@@ -1,0 +1,5 @@
+en:
+  deco_lite:
+    errors:
+      field_missing: "field is missing"
+      field_name_invalid: "field_name '%{field_name}' is not a valid field name"

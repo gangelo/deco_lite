@@ -1,18 +1,19 @@
 PATH
   remote: .
   specs:
-    deco_lite (1.0.0)
+    deco_lite (1.1.0)
       activemodel (~> 7.0, >= 7.0.3.1)
       activesupport (~> 7.0, >= 7.0.3.1)
+      i18n (~> 1.12)
       immutable_struct_ex (~> 0.2.0)
       mad_flatter (~> 1.0.0.pre.beta)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (7.0.3.1)
-      activesupport (= 7.0.3.1)
-    activesupport (7.0.3.1)
+    activemodel (7.0.4)
+      activesupport (= 7.0.4)
+    activesupport (7.0.4)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)

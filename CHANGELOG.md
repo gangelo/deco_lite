@@ -1,3 +1,8 @@
+### 1.1.0
+* Changes
+  * Add support for I18n behind configuration feature flipper (off by default) while still in development.
+  * Add missed CHANGELOG.md entry for version 0.3.3 changes.
+
 ### 1.0.0
 * Breaking changes
   * Removed `FieldRequireable` and moved this code to the `Model` class because determination of required fields loaded is now determined in the `Model` class, rather than checking the existance of model attributes.
@@ -7,6 +12,10 @@
   * Remove deprecated `DecoLite::Model#load`. Use `DecoLite::Model#load!` instead.
 * Changes
   * Update README.md file accordingly.
+
+### 0.3.3
+* Changes
+  * Update README.md with clearer examples.
 
 ### 0.3.2
 * Changes

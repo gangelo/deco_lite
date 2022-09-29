@@ -85,9 +85,16 @@ module DecoLite
       required_fields.each do |field_name|
         next if loaded_fields.include? field_name
 
-        errors.add(field_name, 'field is missing',
+        errors.add(field_name, field_missing_error,
           type: self.class::MISSING_REQUIRED_FIELD_ERROR_TYPE)
       end
+    end
+
+    def field_missing_error
+      return 'field is missing' unless DecoLite.configuration.i18n_on?
+
+      puts 'WARNING: The i18n feature is still in testing!'
+      return I18n.t('deco_lite.errors.field_missing')
     end
   end
 end

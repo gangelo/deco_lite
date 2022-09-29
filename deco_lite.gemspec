@@ -37,6 +37,7 @@ Gem::Specification.new do |spec|
   spec.add_runtime_dependency 'activesupport', '~> 7.0', '>= 7.0.3.1'
   spec.add_runtime_dependency 'immutable_struct_ex', '~> 0.2.0'
   spec.add_runtime_dependency 'mad_flatter', '~> 1.0.0.pre.beta'
+  spec.add_runtime_dependency 'i18n', '~> 1.12'
   spec.add_development_dependency 'bundler', '~> 2.2', '>= 2.2.17'
   spec.add_development_dependency 'pry-byebug', '~> 3.9'
   spec.add_development_dependency 'reek', '~> 6.1', '>= 6.1.1'

@@ -13,11 +13,7 @@
 
 ## Introduction
 
-DecoLite is in development. I wouldn't expect breaking changes before v1.0.0; however, I can't completely rule this out. Currently, DecoLite only supports Hashes whose keys are `Symbols`, contain no embedded spaces, and conform to Ruby `attr_accessor` naming conventions. However, I might try work out a reasonable solution for all this in future releases if the need is there.
-
-TBD: Documentation regarding `DecoLite::Model` options, `DecoLite::Model#load!` options: how these work, and how they play together (e.g. options `fields: :merge` and `fields: :strict` for example; in the meantime, see the specs).
-
-_Deco_ is a little gem that allows you to use the provided `DecoLite::Model` class (`include ActiveModel::Model`) to create Decorator classes which can be instantiated and used. Inherit from `DecoLite::Model` to create your own unique classes with custom functionality. A `DecoLite::Model` includes `ActiveModel::Model`, so validation can be applied using [ActiveModel validation helpers](https://api.rubyonrails.org/v6.1.3/classes/ActiveModel/Validations/HelperMethods.html) you are familiar with; or, you can roll your own - just like any other ActiveModel.
+_Deco_ is a little gem that allows you to use the provided `DecoLite::Model` class (`include ActiveModel::Model`) to dynamically create Decorator class objects. Inherit from `DecoLite::Model` to create your own unique classes with custom functionality. A `DecoLite::Model` includes `ActiveModel::Model`, so validation can be applied using [ActiveModel validation helpers](https://api.rubyonrails.org/v6.1.3/classes/ActiveModel/Validations/HelperMethods.html) you are familiar with; or, you can roll your own - just like any other ActiveModel.
 
 A `DecoLite::Model` will allow you to consume a Ruby Hash that you supply via the initializer (`DecoLite::Model#new`) or via the `DecoLite::Model#load!` method. Your supplied Ruby Hashes are used to create `attr_accessor` attributes (_"fields"_) on the model. Each attribute created, is then assigned its value from the Hash loaded. Any number of hashes can be consumed using the `DecoLite::Model#load!` method.
 
@@ -221,13 +217,11 @@ model.validate
 
 #### Validate whether or not certain fields were loaded
 
-To be clear, this example does not validate the _data_ associated with the fields loaded; rather, this example validates whether or not the _fields themselves_ (`attr_accessors`) were created on your model as a result of loading data into your model. If you only want to validate the _data_ loaded into your model, simply add `ActiveModel` validation, just like you would any other `ActiveModel` model, see the [Add validators to my model](#add-validators-to-my-model) section.
+To be clear, this example does not validate the _data_ associated with the fields loaded; rather, this example validates whether or not the _fields themselves_ were loaded into your model, and as a result, `attr_accessors` created. If you only want to validate the _data_ loaded into your model, simply add `ActiveModel` validation, just like you would any other `ActiveModel` model, see the [Add validators to my model](#add-validators-to-my-model) section.
 
-If you want to validate whether or not particular _fields_ were added to your model as attributes (`attr_accessor`), as a result of `#load!`ing data into your model, you need to do a few things:
+If you want to validate whether or not particular _fields_ were added to your model as attributes (`attr_accessor`), as a result of `#load!`ing data into your model, you need to add the required field names to the `DecoLite::Model#required_fields` attribute, or use inheritance:
   - Create a `DecoLite::Model` subclass.
-  - Override the `DecoLite::Model#required_fields` method to return the field names you want to validate.
-  - Use the `required_fields: nil` option when instantiating your model object.
-  - DO NOT add `ActiveModel` validators that _explicitly_ reference any field returned from `DecoLite::Model#required_fields`; this will cause `attr_accessors` to be created for these fields; consequently, `DecoLite::FieldRequireable#validate_required_fields` will *never* return any errors because these fields will exist as attributes on your model. In other words, do not add (for example) `validates :first, :last, :address, presence: true` to your model if you need to validate whether or not the data you load into your model includs fields `:first`, `:last` and `:address`.
+  - Override the `DecoLite::Model#required_fields` method and return an Array of field names represented by `Symbols` you want to validate.
 
 For example:
 
@@ -238,15 +232,11 @@ class Model < DecoLite::Model
 
   def required_fields
     # We want to ensure these fields were included as Hash keys during loading.
-    %i(first last address)
+    %i[first last address]
   end
 end
-```
 
-Option `required_fields: :auto` is the default which will automatically create `attr_accessors` for any field returned from the `DecoLite::Model#required_fields` method; therefore, we need to set the `:required_fields` option to `nil` (i.e. `required_fields: nil`). This will prohibit `DecoLite::Model` from automatically creating `attr_accessors` for `:first`, `:last` and `:address`, and achieve the results we want:
-
-```ruby
-model = Model.new(options: { required_fields: nil })
+model = Model.new
 
 model.validate
 #=> false
@@ -279,34 +269,19 @@ model.errors.full_messages
 
 If you simply want to validate the _data_ loaded into your model, simply add `ActiveModel` validation, just like you would any other `ActiveModel` model, see the [Add validators to my model](#add-validators-to-my-model) section.
 
-If you want to validate whether or not particular fields were loaded _and_ field data associated with these same fields, you'll have to use custom validation (e.g. override `DecoLite::FieldRequireable#validate_required_fields` and manually add your own validation and errors). This is because `DecoLite::Model#new` will automatically create `attr_accessors` for any attribute (field) that has an _explicit_ `ActiveModel` validation associated with it, and return false positives when you validate your model. In addition to this, you will need to do several other things outlined in the [Validate whether or not certain fields were loaded](#validate-whether-or-not-certain-fields-were-loaded) section.
+If you want to validate whether or not particular fields were loaded _and_ field data associated with these same fields, you simply need to add the required fields and any other validation(s).
 
 For example:
 
 ```ruby
 class Model < DecoLite::Model
+  validates :first, :last, :address, :age, presence: true
+
   def required_fields
-    %i(first last address age)
-  end
-
-  def validate_required_fields
-    super
-
-    first = self.try(:first)
-    errors.add(:first, "can't be blank") if first.nil?
-
-    last = self.try(:last)
-    errors.add(:last, "can't be blank") if last.nil?
-
-    address = self.try(:address)
-    errors.add(:address, "can't be blank") if address.nil?
-
-    age = self.try(:age)
-    errors.add(:age, "can't be blank") if age.nil?
-    errors.add(:age, 'is not a number') unless /\d+/ =~ age
+    %i[first last address age]
   end
 end
-model = Model.new(options: { required_fields: nil })
+model = Model.new
 
 model.validate
 #=> false
@@ -336,7 +311,7 @@ class JustBecauseYouCanDoesntMeanYouShould < DecoLite::Model
   def initialize(options: {})
     super
 
-    @field_names = %i(existing_field)
+    @field_names = %i[existing_field]
   end
 end
 ```

@@ -2,16 +2,14 @@
 
 require_relative 'fields_optionable'
 require_relative 'namespace_optionable'
-require_relative 'required_fields_optionable'
 
 module DecoLite
   # Methods to validate options.
   module OptionsValidatable
     include DecoLite::FieldsOptionable
     include DecoLite::NamespaceOptionable
-    include DecoLite::RequiredFieldsOptionable
 
-    OPTIONS = [OPTION_FIELDS, OPTION_NAMESPACE, OPTION_REQUIRED_FIELDS].freeze
+    OPTIONS = [OPTION_FIELDS, OPTION_NAMESPACE].freeze
 
     def validate_options!(options:)
       raise ArgumentError, 'options is not a Hash' unless options.is_a? Hash
@@ -21,7 +19,6 @@ module DecoLite
       validate_option_keys! options: options
       validate_option_fields! fields: options[OPTION_FIELDS]
       validate_option_namespace! namespace: options[OPTION_NAMESPACE]
-      validate_option_required_fields! required_fields: options[OPTION_REQUIRED_FIELDS]
     end
 
     def validate_options_present!(options:)
@@ -47,15 +44,6 @@ module DecoLite
 
       raise ArgumentError, 'option :namespace value or type is invalid. A Symbol was expected, ' \
                            "but '#{namespace}' (#{namespace.class}) was received."
-    end
-
-    def validate_option_required_fields!(required_fields:)
-      # :required_fields is optional.
-      return if required_fields.blank? || OPTION_REQUIRED_FIELDS_VALUES.include?(required_fields)
-
-      raise ArgumentError,
-        "option :fields_required value or type is invalid. #{OPTION_REQUIRED_FIELDS_VALUES} (Symbol) " \
-        "was expected, but '#{required_fields}' (#{required_fields.class}) was received."
     end
   end
 end

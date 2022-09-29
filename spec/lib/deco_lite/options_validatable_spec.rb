@@ -29,19 +29,6 @@ RSpec.shared_examples 'option :namespace raises an error' do
   end
 end
 
-RSpec.shared_examples 'option required_fields raises an error' do
-  before do
-    options[DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS] = option_value
-  end
-
-  it 'raises an error' do
-    expected_error = 'option :fields_required value or type is invalid. ' \
-      "#{DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS_VALUES} (Symbol) " \
-      "was expected, but '#{option_value}' (#{option_value.class}) was received."
-    expect { subject }.to raise_error expected_error
-  end
-end
-
 RSpec.describe DecoLite::OptionsValidatable, type: :module do
   subject(:klass) do
     Class.new do
@@ -53,7 +40,7 @@ RSpec.describe DecoLite::OptionsValidatable, type: :module do
 
   describe 'constants' do
     describe 'OPTIONS' do
-      it_behaves_like 'a constant', :OPTIONS, [:fields, :namespace, :required_fields]
+      it_behaves_like 'a constant', :OPTIONS, [:fields, :namespace]
     end
   end
 
@@ -104,19 +91,6 @@ RSpec.describe DecoLite::OptionsValidatable, type: :module do
           end
         end
       end
-
-      context ':required_fields' do
-        let(:option_values) { DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS_VALUES }
-
-        it 'does not raise an error' do
-          expect do
-            option_values.each do |option_value|
-              options[DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS] = option_value
-              subject.validate_options!(options: options)
-            end
-          end.to_not raise_error
-        end
-      end
     end
 
     context 'when the options are invalid' do
@@ -148,20 +122,6 @@ RSpec.describe DecoLite::OptionsValidatable, type: :module do
           let(:option_value) { 'bad' }
 
           it_behaves_like 'option :namespace raises an error'
-        end
-      end
-
-      context 'when the :required_fields option value is invalid' do
-        context 'when not a Symbol' do
-          let(:option_value) { 'bad' }
-
-          it_behaves_like 'option required_fields raises an error'
-        end
-
-        context 'when the wrong Symbol' do
-          let(:option_value) { :bad }
-
-          it_behaves_like 'option required_fields raises an error'
         end
       end
     end

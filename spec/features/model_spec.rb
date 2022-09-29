@@ -87,34 +87,41 @@ RSpec.describe 'DecoLite::Model features', type: :features do
     end
   end
 
-  describe 'when defining required fields' do
+  describe 'when defining #required_fields' do
     subject do
-      Class.new(DecoLite::Model) do
+      class Model < DecoLite::Model
         def required_fields
-          %i(field1 field2)
+          @required_fields ||= %i[
+            namespace_user_first_name
+            namespace_user_last_name
+            namespace_user_ssn
+          ]
         end
-      end.new(options: options).load!(hash: hash)
-    end
-
-    before do
-      subject.validate
-    end
-
-    context 'when the required fields are present' do
-      let(:hash) { { field1: :value1, field2: :value2 } }
-
-      it 'returns no errors' do
-        expect(subject.valid?).to eq true
       end
+      Model.new(hash: hash, options: { namespace: :namespace })
     end
 
-    context 'when the required fields are missing' do
-      let(:hash) { { field1: :value1 } }
-      let(:options) { { fields: :merge, required_fields: nil } }
+    let(:hash) do
+      {
+        user: {
+          first_name: 'first_name'
+        }
+      }
+    end
 
-      it 'returns errors' do
-        expected_errors = ['Field2 field is missing']
-        expect(subject.errors.full_messages).to match_array expected_errors
+    context 'when the required fields take more than 1 #load! to load' do
+      before do
+        subject
+      end
+
+      it 'fails validation until the reqired fields load' do
+        expect(subject.valid?).to eq false
+
+        subject.load!(hash: { user: { last_name: 'last_name' } })
+        expect(subject.valid?).to eq false
+
+        subject.load!(hash: { user: { ssn: 'ssn' } })
+        expect(subject.valid?).to eq true
       end
     end
   end

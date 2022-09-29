@@ -1,3 +1,13 @@
+### 1.0.0
+* Breaking changes
+  * Removed `FieldRequireable` and moved this code to the `Model` class because determination of required fields loaded is now determined in the `Model` class, rather than checking the existance of model attributes.
+  * Removed `RequiredFieldsOptionable` since determination of whether or not required fields were loaded no longer depends on the existance of model attributes, this option was removed. `Model#required_fields` model attributes can now be created unconditionally, and still determine whether or not reqired fields were loaded or not.
+  * Since `FieldRequireable` has been removed, along with `#required_fields`, the `Model#required_fields` can now be overridden or manipulated to designate required fields. Required fields will cause validtion to fail if those fields are not loaded into the model like before.
+  * The reason for the aforementioned changes is that the whole paradigm to validate "required fields" (i.e. fields required when loading a Hash) based on model attributes introduced complexity/awkwardness in using the `DecoLite::Model` class, as well as complexity in the `DecoLite` codebase. These changes makes things simpler and cleaner.
+  * Remove deprecated `DecoLite::Model#load`. Use `DecoLite::Model#load!` instead.
+* Changes
+  * Update README.md file accordingly.
+
 ### 0.3.2
 * Changes
   * Refactor FieldAssignable to remove call to FieldCreatable#create_field_accessor as this breaks single responsibility rule; which, in this case, makes sense to remove. FieldCreatable#create_field_accessor can be called wherever creation of a attr_accessor is needed.

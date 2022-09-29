@@ -24,9 +24,6 @@ RSpec.shared_context 'model initialization params' do
           .difference([DecoLite::FieldsOptionable::OPTION_FIELDS_DEFAULT]).first,
       DecoLite::NamespaceOptionable::OPTION_NAMESPACE =>
         "unique_#{DecoLite::NamespaceOptionable::OPTION_NAMESPACE_DEFAULT || 'namespace'}".to_sym,
-      DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS =>
-        DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS_VALUES
-          .difference([DecoLite::RequiredFieldsOptionable::OPTION_REQUIRED_FIELDS_DEFAULT]).first,
     }
   end
   let(:hash) do

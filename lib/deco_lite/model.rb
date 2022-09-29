@@ -3,7 +3,6 @@
 require 'active_model'
 require_relative 'field_assignable'
 require_relative 'field_names_persistable'
-require_relative 'field_requireable'
 require_relative 'fields_auto_attr_accessable'
 require_relative 'hash_loadable'
 require_relative 'hashable'
@@ -17,14 +16,13 @@ module DecoLite
     include ActiveModel::Model
     include FieldAssignable
     include FieldNamesPersistable
-    include FieldRequireable
     include FieldsAutoloadable
     include HashLoadable
     include Hashable
     include ModelNameable
     include Optionable
 
-    validate :validate_required_fields
+    MISSING_REQUIRED_FIELD_ERROR_TYPE = :missing_required_field
 
     def initialize(hash: {}, options: {})
       # Accept whatever options are sent, but make sure
@@ -36,27 +34,60 @@ module DecoLite
 
       hash ||= {}
 
-      auto_fields = auto_attr_accessors.merge(hash)
-      load!(hash: auto_fields, options: options) if hash.present? || auto_attr_accessors?
+      load_hash!(hash: hash, options: options) if hash.present?
+
+      load_hash!(hash: auto_attr_accessors, options: options, add_loaded_fields: false) if auto_attr_accessors?
+    end
+
+    validate :validate_required_fields
+
+    # Returns field names that will be used to validate whether or not
+    # these fields were loaded from hashes upon construction (#new) or
+    # via #load!.
+    #
+    # You must override this method if you want to return field names that
+    # are required to be present.
+    def required_fields
+      @required_fields ||= %i[]
     end
 
     def load!(hash:, options: {})
+      load_hash! hash: hash, options: options
+    end
+
+    private
+
+    attr_writer :required_fields
+
+    def loaded_fields
+      @loaded_fields ||= []
+    end
+
+    def load_hash!(hash:, options: {}, add_loaded_fields: true)
       # Merge options into the default options passed through the
       # constructor; these will override any options passed in when
       # this object was created, allowing us to retain any defaut
       # options while loading, but also provide option customization
       # of options when needed.
       options = Options.with_defaults(options, defaults: self.options)
-      load_hash(hash: hash, deco_lite_options: options)
+      load_hash(hash: hash, deco_lite_options: options) do |loaded_field|
+        loaded_fields << loaded_field if add_loaded_fields
+      end
 
       self
     end
 
-    def load(hash:, options: {})
-      puts 'WARNING: DecoLite::Model#load will be deprecated in a future release; ' \
-           'use DecoLite::Model#load! instead!'
+    # Validator for field names. This validator simply checks to make
+    # sure that the field was created, which can only occur if:
+    # A) The field was defined on the model explicitly (e.g. attr_accessor :field).
+    # B) The field was created as a result of loading data dynamically.
+    def validate_required_fields
+      required_fields.each do |field_name|
+        next if loaded_fields.include? field_name
 
-      load!(hash: hash, options: options)
+        errors.add(field_name, 'field is missing',
+          type: self.class::MISSING_REQUIRED_FIELD_ERROR_TYPE)
+      end
     end
   end
 end

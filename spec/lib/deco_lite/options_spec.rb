@@ -101,23 +101,5 @@ RSpec.describe DecoLite::Options, type: :module do
         end
       end
     end
-
-    describe '#required_fields_auto?' do
-      context 'when option required_fields: is :auto' do
-        let(:options) { { fields: :merge, required_fields: :auto } }
-
-        it 'returns true' do
-          expect(subject.required_fields_auto?).to eq true
-        end
-      end
-
-      context 'when option required_fields: is not :auto' do
-        let(:options) { { fields: :merge, required_fields: nil } }
-
-        it 'returns false' do
-          expect(subject.required_fields_auto?).to eq false
-        end
-      end
-    end
   end
 end

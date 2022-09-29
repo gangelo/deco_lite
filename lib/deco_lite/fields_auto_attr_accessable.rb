@@ -10,14 +10,12 @@ module DecoLite
       auto_attr_accessors.present?
     end
 
-    # This method returns a Hash of fields that are implicitly defined either
-    # through ActiveModel validators or by returning them from the
-    # #required_fields Array.
+    # This method returns a Hash of fields that are implicitly defined
+    # through ActiveModel validators.
     def auto_attr_accessors
       return @auto_attr_accessors.dup if defined?(@auto_attr_accessors)
 
       @auto_attr_accessors = self.class.validators.map(&:attributes)
-      @auto_attr_accessors.concat(required_fields) if options.required_fields_auto?
       @auto_attr_accessors = auto_attr_accessors_assign
     end
 

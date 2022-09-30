@@ -1,3 +1,7 @@
+### 1.1.0
+* Changes
+  * Update mad_flatter gem to v2.0.0.
+
 ### 1.0.0
 * Breaking changes
   * Removed `FieldRequireable` and moved this code to the `Model` class because determination of required fields loaded is now determined in the `Model` class, rather than checking the existance of model attributes.

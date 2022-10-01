@@ -1,3 +1,7 @@
+### 1.2.0
+* Changes
+  * Update the README.md file with better explainations and examples.
+
 ### 1.1.0
 * Changes
   * Update mad_flatter gem to v2.0.0.

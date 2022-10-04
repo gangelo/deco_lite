@@ -34,9 +34,9 @@ module DecoLite
 
       hash ||= {}
 
-      load_hash!(hash: hash, options: options) if hash.present?
-
       load_hash!(hash: auto_attr_accessors, options: options, add_loaded_fields: false) if auto_attr_accessors?
+
+      load_hash!(hash: hash, options: options) if hash.present?
     end
 
     validate :validate_required_fields

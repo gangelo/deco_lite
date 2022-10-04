@@ -1,3 +1,10 @@
+### 1.2.1
+* Bugs
+  * Fix bug that did not recognize loaded field values if `attr_accessors` were previously created for the loaded fields due to model validations being present. If `ActiveModel` validators are present on the model, DecoLite will automatically create `attr_accessors` for the fields associated with the validations. The presence of these fields being automatically loaded prohibited any fields subsequently loaded having the same field names to not be recognized as having been loaded, causing validation to validate incorrectly (the model did not recognize the fields as having been loaded).
+  * Fix bug that wiped out field values previously loaded if `ActiveModel` validations were present for fields having the same name. This is because DecoLite will automatically create `attr_accessors` for the fields associated with the validations, initializing these automatically created field vars to be initialized to nil. The auto-creation of these `attr_accessors` was taking place in #initialize AFTER the initial load of any Hash passed to #initialize in the :hash param, so the values loaded were getting nilled out.
+* Changes
+  * Add specs to test the above scenarios.
+
 ### 1.2.0
 * Changes
   * Update the README.md file with better explainations and examples.

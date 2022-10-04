@@ -69,21 +69,52 @@ RSpec.describe 'DecoLite::Model features', type: :features do
   end
 
   describe 'when defining validators' do
-    subject do
-      Class.new(DecoLite::Model) do
-        validates :field1, :field2, presence: true
-      end.new(options: options).load!(hash: hash)
+    context 'when using #initialize to load the data' do
+      subject do
+        Class.new(DecoLite::Model) do
+          validates :field1, :field2, :field3, presence: true
+
+          def required_fields
+            %i[field4]
+          end
+        end.new(hash: hash, options: options)
+      end
+
+      before do
+        subject.validate
+      end
+
+      let(:hash) { { field1: :value1, field2: :value2, field3: nil } }
+
+      it 'does not overwrite the loaded field values' do
+        expect(subject.field1).to eq hash[:field1]
+        expect(subject.field2).to eq hash[:field2]
+        expect(subject.field3).to eq hash[:field3]
+      end
+
+      it 'validates correctly' do
+        expected_errors = ["Field3 can't be blank", "Field4 field is missing"]
+        expect(subject.errors.full_messages).to match_array expected_errors
+      end
     end
 
-    before do
-      subject.validate
-    end
+    context 'when using #load! to load the data' do
+      subject do
+        Class.new(DecoLite::Model) do
+          validates :field1, :field2, presence: true
+        end.new(options: options).load!(hash: hash)
+      end
 
-    let(:hash) { { field1: :value1, field2: nil } }
+      before do
+        subject.validate
+      end
 
-    it 'validates' do
-      expected_errors = ["Field2 can't be blank"]
-      expect(subject.errors.full_messages).to match_array expected_errors
+      let(:hash) { { field1: :value1, field2: nil } }
+
+      it 'validates correctly' do
+        expected_errors = ["Field2 can't be blank"]
+        expect(subject.errors.full_messages).to match_array expected_errors
+      end
     end
   end
 

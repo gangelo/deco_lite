@@ -21,10 +21,8 @@ module DecoLite
       load_service.execute(hash: hash, options: load_service_options).tap do |service_hash|
         service_hash.each_pair do |field_name, value|
           create_field_accessor field_name: field_name, options: deco_lite_options
-          unless field_names.include? field_name
-            yield field_name if block_given?
-            field_names << field_name
-          end
+          yield field_name if block_given?
+          field_names << field_name unless field_names.include? field_name
           set_field_value(field_name: field_name, value: value, options: deco_lite_options)
         end
       end

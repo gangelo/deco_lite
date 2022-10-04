@@ -1,6 +1,6 @@
 # DecoLite
 
-[![GitHub version](http://badge.fury.io/gh/gangelo%2Fdeco.svg)](https://badge.fury.io/gh/gangelo%2Fdeco_lite)
+[![GitHub version](http://badge.fury.io/gh/gangelo%2Fdeco_lite.svg)](https://badge.fury.io/gh/gangelo%2Fdeco_lite)
 
 [![Gem Version](https://badge.fury.io/rb/deco_lite.svg)](https://badge.fury.io/rb/deco_lite)
 
@@ -136,7 +136,7 @@ wife = {
   },
 }
 
-class Couple < DecoLite::Model)
+class Couple < DecoLite::Model
   def live_together?
     husband_info_address == wife_info_address
   end

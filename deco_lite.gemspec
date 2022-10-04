@@ -11,7 +11,22 @@ Gem::Specification.new do |spec|
   spec.email         = ['public.gma@gmail.com']
 
   spec.summary       = 'Dynamically creates an active model from a Hash.'
-  spec.description   = 'Dynamically creates an active model from a Hash.'
+  spec.description   = <<-EOF
+    DecoLite is a little gem that allows you to use the provided DecoLite::Model
+    class to dynamically create Decorator class objects. Use the DecoLite::Model
+    class directly, or inherit from the DecoLite::Model class to create your own
+    unique subclasses with custom functionality. DecoLite::Model
+    includes ActiveModel::Model, so validation can be applied using ActiveModel
+    validation helpers (https://api.rubyonrails.org/v6.1.3/classes/ActiveModel/Validations/HelperMethods.html)
+    you're familiar with; or, you can roll your own - just like any other ActiveModel.
+
+    DecoLite::Model allows you to consume a Ruby Hash that you supply via the
+    initializer (DecoLite::Model#new) or via the DecoLite::Model#load! method. Any
+    number of Ruby Hashes can be consumed. Your supplied Ruby Hashes are used to
+    create attr_accessor attributes (or "fields") on the model. Each attribute
+    created is then assigned the value from the Hash that was loaded. Again, any
+    number of hashes can be consumed using the DecoLite::Model#load! method.
+  EOF
   spec.homepage      = 'https://github.com/gangelo/deco_lite'
   spec.license       = 'MIT'
 

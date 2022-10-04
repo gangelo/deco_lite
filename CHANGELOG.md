@@ -1,3 +1,7 @@
+### 1.3.0
+* Changes
+  * Update gem description in .gemspec.
+
 ### 1.2.1
 * Bugs
   * Fix bug that did not recognize loaded field values if `attr_accessors` were previously created for the loaded fields due to model validations being present. If `ActiveModel` validators are present on the model, DecoLite will automatically create `attr_accessors` for the fields associated with the validations. The presence of these fields being automatically loaded prohibited any fields subsequently loaded having the same field names to not be recognized as having been loaded, causing validation to validate incorrectly (the model did not recognize the fields as having been loaded).

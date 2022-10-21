@@ -3,7 +3,6 @@
 require 'bundler/setup'
 require 'pry-byebug'
 require 'simplecov'
-SimpleCov.start
 
 SimpleCov.start do
   add_filter 'spec'

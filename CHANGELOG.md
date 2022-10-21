@@ -1,3 +1,8 @@
+### 1.4.0
+* Changes
+  * Required ruby version is now '~> 3.0'
+  * Prohibit SimpleCov from starting 2x in spec_helper.rb.
+
 ### 1.3.0
 * Changes
   * Update gem description in .gemspec.

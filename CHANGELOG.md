@@ -1,3 +1,7 @@
+### 1.5.0
+* Changes
+  * Update ruby gems.
+
 ### 1.4.0
 * Changes
   * Required ruby version is now '~> 3.0'

@@ -1,3 +1,7 @@
+### 1.5.1
+* Changes
+  * Update ruby gems.
+
 ### 1.5.0
 * Changes
   * Update ruby gems.

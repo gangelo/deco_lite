@@ -1,3 +1,7 @@
+### 1.5.2
+* Changes
+  * Update ruby gems. Remedy activesupport dependabot alert.
+
 ### 1.5.1
 * Changes
   * Update ruby gems.

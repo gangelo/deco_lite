@@ -176,12 +176,20 @@ model.wife_info_address     #=> 1 street, boonton, nj 07005
 
 #### Add validators to my model
 
-Simply add your `ActiveModel` validators just like you would any other `ActiveModel::Model` validator. However, be aware that any attribute (field) having an *explicit validation* associated with it, will automatically cause an `attr_accessor` to be created for that field; this is to avoid `NoMethodErrors` when validating the model (e.g. `#valid?`, `#validate`, etc.) *before* the data is loaded that would prompt the creation of the associated `attr_accessors` on the model:
+Simply add your `ActiveModel` validators just like you would any other `ActiveModel::Model` validator, with one caveat noted below. It is important to note that any attribute (field) having an *explicit validation* associated with it, will automatically cause `DecoLite` to create an `attr_accessor` for that field; this is to avoid `NoMethodErrors` when validating the model (e.g. `#valid?`, `#validate`, etc.) *before* the data is loaded. Why does `DecoLite` need to do this? Typically, `DecoLite` dynamically creates `attr_accessors` using the keys from the `Hash` loaded into the model. If the `Hash` loaded into your `DecoLite` model _does not_ include a `Hash` key for the attribute referenced by any validators on your model, `DecoLite` will not create an `attr_accessor` for it; consequently, calling any validation method (e.g. `#valid?`, `#validate`, etc.) on your model will result in a `NoMethodError` for that attribute.
+
+One caveat to note is when using Rails custom validators with `validates_with`. When using Rails custom validators via `validates_with`, you should pass the attribute names being validated to your custom validator via the `#options` `Hash` with a key of either `:attributes` or `:fields`. This is so that `DecoLite` can create dynamic `attr_accessors` for these attributes and avoid the aformentioned `NoMethodError` (see above):
 
 ```ruby
 class Model < DecoLite::Model
   validates :first, :last, :address, presence: true
   validates :age, numericality: true
+  # When using Rails custom validators via validates_with, 
+  # pass the attribute name(s) being validated in an Array
+  # via the #options Hash, with a key of either :attributes 
+  # or :fields. For example:
+  validates_with CustomFirstNameValidator, attributes: [:first]
+  validates_with CustomAgeValidator, fields: [:age]
 end
 
 # :address is missing

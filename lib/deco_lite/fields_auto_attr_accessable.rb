@@ -15,7 +15,20 @@ module DecoLite
     def auto_attr_accessors
       return @auto_attr_accessors.dup if defined?(@auto_attr_accessors)
 
-      @auto_attr_accessors = self.class.validators.map(&:attributes)
+      @auto_attr_accessors = self.class.validators.filter_map do |validator|
+        if validator.respond_to?(:attributes)
+          validator.attributes
+        elsif validator.respond_to?(:options)
+          # This path handles the case where the validator is a custom validator
+          # (i.e. `validates_with MyCustomValidator`). deco_lite in this case, has
+          # no way of knowing what fields are being validated, so we have to rely
+          # on the user to tell us what fields are being validated by passing
+          # the attributes to validate in the #options hash. For example:
+          # `validates_with MyCustomValidator, attributes: %i[field1 field2]`)
+          # `validates_with MyCustomValidator, fields: %i[field1 field2]`)
+          validator.options[:attributes].presence || validator.options[:fields].presence
+        end
+      end
       @auto_attr_accessors = auto_attr_accessors_assign
     end
 

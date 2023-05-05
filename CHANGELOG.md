@@ -1,3 +1,10 @@
+### 1.5.3
+* Bugs
+  * Fix bug that raised an exception when using `validates_with <Custom Validator>` because `#attributes` is not found on custom validators.
+* Changes
+  * You can now use `validates_with <Custom Validator>` by passing the attribute name(s) to your custom validator via the `#options` hash with a key of `:attributes` OR `:fields`. For example: `validates_with MyCustomValidator, attributes: %i[field1 field2]` of `validates_with MyCustomValidator, fields: %i[field1 field2]`
+  * Updated README.md for the above change.
+  * Update bundled gems.
 ### 1.5.2
 * Changes
   * Update ruby gems. Remedy activesupport dependabot alert.

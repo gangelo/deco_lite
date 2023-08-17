@@ -1,3 +1,8 @@
+### 1.5.4
+
+* Changes
+  * Update ruby gems
+
 ### 1.5.3
 * Bugs
   * Fix bug that raised an exception when using `validates_with <Custom Validator>` because `#attributes` is not found on custom validators.

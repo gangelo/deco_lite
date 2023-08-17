@@ -50,8 +50,8 @@ Gem::Specification.new do |spec|
 
   spec.add_runtime_dependency 'activemodel', '~> 7.0', '>= 7.0.3.1'
   spec.add_runtime_dependency 'activesupport', '~> 7.0', '>= 7.0.3.1'
-  spec.add_runtime_dependency 'immutable_struct_ex', '~> 0.2.0'
-  spec.add_runtime_dependency 'mad_flatter', '~> 2.0'
+  spec.add_runtime_dependency 'immutable_struct_ex', '~> 1.0', '>= 1.0.1'
+  spec.add_runtime_dependency 'mad_flatter', '~> 3.0'
   spec.add_development_dependency 'bundler', '~> 2.2', '>= 2.2.17'
   spec.add_development_dependency 'pry-byebug', '~> 3.9'
   spec.add_development_dependency 'reek', '~> 6.1', '>= 6.1.1'
@@ -59,6 +59,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop', '~> 1.35'
   spec.add_development_dependency 'rubocop-performance', '~> 1.14', '>= 1.14.3'
   spec.add_development_dependency 'rubocop-rspec', '~> 2.12', '>= 2.12.1'
-  spec.add_development_dependency 'simplecov', '~> 0.21.2'
+  spec.add_development_dependency 'simplecov', '~> 0.22.0'
   spec.add_development_dependency 'rake', '~> 13.0', '>= 13.0.6'
 end

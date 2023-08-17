@@ -4,15 +4,15 @@ PATH
     deco_lite (1.5.3)
       activemodel (~> 7.0, >= 7.0.3.1)
       activesupport (~> 7.0, >= 7.0.3.1)
-      immutable_struct_ex (~> 0.2.0)
+      immutable_struct_ex (>= 0.2, < 1.1)
       mad_flatter (~> 2.0)
 
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (7.0.4.3)
-      activesupport (= 7.0.4.3)
-    activesupport (7.0.4.3)
+    activemodel (7.0.7)
+      activesupport (= 7.0.7)
+    activesupport (7.0.7)
       concurrent-ruby (~> 1.0, >= 1.0.2)
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
@@ -23,16 +23,16 @@ GEM
     concurrent-ruby (1.2.2)
     diff-lcs (1.5.0)
     docile (1.4.0)
-    i18n (1.13.0)
+    i18n (1.14.1)
       concurrent-ruby (~> 1.0)
-    immutable_struct_ex (0.2.3)
+    immutable_struct_ex (1.0.0)
     json (2.6.3)
     kwalify (0.7.2)
-    mad_flatter (2.0.0)
+    mad_flatter (2.1.0)
       activesupport (~> 7.0, >= 7.0.3.1)
-      immutable_struct_ex (~> 0.2.0)
+      immutable_struct_ex (~> 1.0)
     method_source (1.0.0)
-    minitest (5.18.0)
+    minitest (5.19.0)
     parallel (1.23.0)
     parser (3.2.2.1)
       ast (~> 2.4.1)
@@ -96,6 +96,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-19
+  x86_64-linux
 
 DEPENDENCIES
   bundler (~> 2.2, >= 2.2.17)

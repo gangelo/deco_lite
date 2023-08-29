@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    deco_lite (1.5.4)
+    deco_lite (1.5.5)
       activemodel (~> 7.0, >= 7.0.3.1)
       activesupport (~> 7.0, >= 7.0.3.1)
       immutable_struct_ex (~> 1.0, >= 1.0.1)

@@ -2,5 +2,5 @@
 
 # Defines the version of this gem.
 module DecoLite
-  VERSION = '1.5.4'
+  VERSION = '1.5.5'
 end

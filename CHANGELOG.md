@@ -1,3 +1,9 @@
+### 1.5.5
+
+* Changes
+  * Update ruby gems
+  * Fix rubocop violations
+
 ### 1.5.4
 
 * Changes

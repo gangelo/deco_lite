@@ -14,9 +14,9 @@ module DecoLite
     def validate_options!(options:)
       raise ArgumentError, 'options is not a Hash' unless options.is_a? Hash
 
-      validate_options_present! options: options
+      validate_options_present!(options:)
 
-      validate_option_keys! options: options
+      validate_option_keys!(options:)
       validate_option_fields! fields: options[OPTION_FIELDS]
       validate_option_namespace! namespace: options[OPTION_NAMESPACE]
     end

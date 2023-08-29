@@ -34,9 +34,9 @@ module DecoLite
 
       hash ||= {}
 
-      load_hash!(hash: auto_attr_accessors, options: options, add_loaded_fields: false) if auto_attr_accessors?
+      load_hash!(hash: auto_attr_accessors, options:, add_loaded_fields: false) if auto_attr_accessors?
 
-      load_hash!(hash: hash, options: options) if hash.present?
+      load_hash!(hash:, options:) if hash.present?
     end
 
     validate :validate_required_fields
@@ -52,7 +52,7 @@ module DecoLite
     end
 
     def load!(hash:, options: {})
-      load_hash! hash: hash, options: options
+      load_hash! hash:, options:
     end
 
     private
@@ -70,7 +70,7 @@ module DecoLite
       # options while loading, but also provide option customization
       # of options when needed.
       options = Options.with_defaults(options, defaults: self.options)
-      load_hash(hash: hash, deco_lite_options: options) do |loaded_field|
+      load_hash(hash:, deco_lite_options: options) do |loaded_field|
         loaded_fields << loaded_field if add_loaded_fields
       end
 

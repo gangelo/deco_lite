@@ -9,8 +9,8 @@ module DecoLite
 
     def set_field_values(hash:, field_info:, options:)
       field_info.each do |name, info|
-        value = get_field_value(hash: hash, field_info: info)
-        set_field_value(field_name: name, value: value, options: options)
+        value = get_field_value(hash:, field_info: info)
+        set_field_value(field_name: name, value:, options:)
       end
     end
 

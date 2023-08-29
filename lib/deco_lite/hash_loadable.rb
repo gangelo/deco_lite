@@ -17,13 +17,13 @@ module DecoLite
 
       return {} if hash.blank?
 
-      load_service_options = merge_with_load_service_options deco_lite_options: deco_lite_options
-      load_service.execute(hash: hash, options: load_service_options).tap do |service_hash|
+      load_service_options = merge_with_load_service_options(deco_lite_options:)
+      load_service.execute(hash:, options: load_service_options).tap do |service_hash|
         service_hash.each_pair do |field_name, value|
-          create_field_accessor field_name: field_name, options: deco_lite_options
+          create_field_accessor field_name:, options: deco_lite_options
           yield field_name if block_given?
           field_names << field_name unless field_names.include? field_name
-          set_field_value(field_name: field_name, value: value, options: deco_lite_options)
+          set_field_value(field_name:, value:, options: deco_lite_options)
         end
       end
     end

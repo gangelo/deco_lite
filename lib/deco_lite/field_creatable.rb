@@ -13,19 +13,19 @@ module DecoLite
       return if field_names.blank?
 
       field_names.each do |field_name|
-        create_field_accessor(field_name: field_name, options: options)
+        create_field_accessor(field_name:, options:)
       end
     end
 
     def create_field_accessor(field_name:, options:)
-      validate_field_name!(field_name: field_name, options: options)
-      validate_field_conflicts!(field_name: field_name, options: options)
+      validate_field_name!(field_name:, options:)
+      validate_field_conflicts!(field_name:, options:)
 
       # If we want to set a class-level attr_accessor
       # self.class.attr_accessor(field_name) if field_name.present?
 
-      create_field_getter field_name: field_name, options: options
-      create_field_setter field_name: field_name, options: options
+      create_field_getter(field_name:, options:)
+      create_field_setter field_name:, options:
     end
 
     private

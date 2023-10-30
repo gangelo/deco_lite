@@ -48,7 +48,7 @@ Gem::Specification.new do |spec|
 
   spec.required_ruby_version = Gem::Requirement.new("~> 3.0")
 
-  spec.add_runtime_dependency 'activemodel', '~> 7.0', '>= 7.0.3.1'
+  spec.add_runtime_dependency 'activemodel', '~> 7.0.8'
   spec.add_runtime_dependency 'activesupport', '~> 7.0', '>= 7.0.3.1'
   spec.add_runtime_dependency 'immutable_struct_ex', '~> 1.0', '>= 1.0.1'
   spec.add_runtime_dependency 'mad_flatter', '~> 3.0'

@@ -1,9 +1,9 @@
 PATH
   remote: .
   specs:
-    deco_lite (1.5.6)
+    deco_lite (1.5.7)
       activemodel (~> 7.0.8)
-      activesupport (~> 7.0, >= 7.0.3.1)
+      activesupport (~> 7.0.8)
       immutable_struct_ex (~> 1.0, >= 1.0.1)
       mad_flatter (~> 3.0)
 

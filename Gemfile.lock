@@ -25,12 +25,12 @@ GEM
     docile (1.4.0)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
-    immutable_struct_ex (1.0.2)
+    immutable_struct_ex (1.0.3)
     json (2.6.3)
     kwalify (0.7.2)
     language_server-protocol (3.17.0.3)
-    mad_flatter (3.0.1)
-      activesupport (~> 7.0, >= 7.0.3.1)
+    mad_flatter (3.0.2)
+      activesupport (~> 7.0.8)
       immutable_struct_ex (~> 1.0)
     method_source (1.0.0)
     minitest (5.20.0)
@@ -104,6 +104,7 @@ GEM
 PLATFORMS
   x86_64-darwin-19
   x86_64-darwin-21
+  x86_64-linux
 
 DEPENDENCIES
   bundler (~> 2.2, >= 2.2.17)

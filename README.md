@@ -1,14 +1,10 @@
 # DecoLite
-
-[![GitHub version](http://badge.fury.io/gh/gangelo%2Fdeco_lite.svg)](https://badge.fury.io/gh/gangelo%2Fdeco_lite)
-
-[![Gem Version](https://badge.fury.io/rb/deco_lite.svg)](https://badge.fury.io/rb/deco_lite)
-
+[![Ruby](https://github.com/gangelo/deco_lite/actions/workflows/ruby.yml/badge.svg)](https://github.com/gangelo/deco_lite/actions/workflows/ruby.yml)
+[![GitHub version](http://badge.fury.io/gh/gangelo%2Fdeco_lite.svg?refresh=1)](https://badge.fury.io/gh/gangelo%2Fdeco_lite)
+[![Gem Version](https://badge.fury.io/rb/deco_lite.svg?refresh=1)](https://badge.fury.io/rb/deco_lite)
 [![](http://ruby-gem-downloads-badge.herokuapp.com/deco_lite?type=total)](http://www.rubydoc.info/gems/deco_lite/)
 [![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://www.rubydoc.info/gems/deco_lite/)
-
 [![Report Issues](https://img.shields.io/badge/report-issues-red.svg)](https://github.com/gangelo/deco_lite/issues)
-
 [![License](http://img.shields.io/badge/license-MIT-yellowgreen.svg)](#license)
 
 ## Introduction
@@ -184,9 +180,9 @@ One caveat to note is when using Rails custom validators with `validates_with`. 
 class Model < DecoLite::Model
   validates :first, :last, :address, presence: true
   validates :age, numericality: true
-  # When using Rails custom validators via validates_with, 
+  # When using Rails custom validators via validates_with,
   # pass the attribute name(s) being validated in an Array
-  # via the #options Hash, with a key of either :attributes 
+  # via the #options Hash, with a key of either :attributes
   # or :fields. For example:
   validates_with CustomFirstNameValidator, attributes: [:first]
   validates_with CustomAgeValidator, fields: [:age]

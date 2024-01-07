@@ -1,7 +1,7 @@
 # DecoLite
 [![Ruby](https://github.com/gangelo/deco_lite/actions/workflows/ruby.yml/badge.svg)](https://github.com/gangelo/deco_lite/actions/workflows/ruby.yml)
-[![GitHub version](http://badge.fury.io/gh/gangelo%2Fdeco_lite.svg?refresh=2)](https://badge.fury.io/gh/gangelo%2Fdeco_lite)
-[![Gem Version](https://badge.fury.io/rb/deco_lite.svg?refresh=2)](https://badge.fury.io/rb/deco_lite)
+[![GitHub version](http://badge.fury.io/gh/gangelo%2Fdeco_lite.svg?refresh=3)](https://badge.fury.io/gh/gangelo%2Fdeco_lite)
+[![Gem Version](https://badge.fury.io/rb/deco_lite.svg?refresh=3)](https://badge.fury.io/rb/deco_lite)
 [![](http://ruby-gem-downloads-badge.herokuapp.com/deco_lite?type=total)](http://www.rubydoc.info/gems/deco_lite/)
 [![Documentation](http://img.shields.io/badge/docs-rdoc.info-blue.svg)](http://www.rubydoc.info/gems/deco_lite/)
 [![Report Issues](https://img.shields.io/badge/report-issues-red.svg)](https://github.com/gangelo/deco_lite/issues)

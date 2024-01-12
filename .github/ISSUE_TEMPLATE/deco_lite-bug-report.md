@@ -1,7 +1,7 @@
 ---
 name: deco_lite bug report
 about: Create a report to help us improve
-title: "[BUG] deco_lite version [x.x.x]"
+title: "[BUG] deco_lite"
 labels: bug
 assignees: gangelo
 

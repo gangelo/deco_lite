@@ -1,7 +1,7 @@
 ---
 name: deco_lite feature request
 about: Suggest an idea for deco_lite
-title: "[ENHANCEMENT] deco_lite feature request"
+title: "[ENHANCEMENT] deco_lite"
 labels: enhancement
 assignees: gangelo
 

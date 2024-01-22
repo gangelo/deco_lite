@@ -16,7 +16,7 @@ module DecoLite
 
     # rubocop:disable Lint/UnusedMethodArgument
     def set_field_value(field_name:, value:, options:)
-      send("#{field_name}=", value)
+      send(:"#{field_name}=", value)
     end
     # rubocop:enable Lint/UnusedMethodArgument
   end

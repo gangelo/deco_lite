@@ -14,6 +14,7 @@ group :development do
   gem 'reek', '>= 6.1', '< 7.0'
   gem 'rubocop', '>= 1.35', '< 2.0'
   gem 'rubocop-performance', '>= 1.14', '< 2.0'
+  gem 'rubocop-rake', '>= 0.6', '< 1.0'
   gem 'rubocop-rspec', '>= 2.12', '< 3.0'
 end
 

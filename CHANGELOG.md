@@ -1,6 +1,7 @@
 ### 1.5.13 2024-02-19
 
 * Changes
+  * Update post install message.
   * Update ruby gems
 
 ### 1.5.12 2024-02-08
